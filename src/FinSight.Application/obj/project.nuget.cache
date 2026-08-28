@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "I1HPELPMO9c=",
+  "dgSpecHash": "qCz60kMusfs=",
   "success": true,
   "projectFilePath": "/home/raimi/works/FinSight/src/FinSight.Application/FinSight.Application.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/raimi/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512"
+  ],
   "logs": []
 }
