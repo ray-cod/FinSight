@@ -13,6 +13,8 @@
         "packagesPath": "/home/raimi/.nuget/packages/",
         "outputPath": "/home/raimi/works/FinSight/src/FinSight.Domain/obj/",
         "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "CentralPackageTransitivePinningEnabled": true,
         "configFilePaths": [
           "/home/raimi/.nuget/NuGet/NuGet.Config"
         ],
@@ -44,6 +46,34 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
+          "centralPackageVersions": {
+            "coverlet.collector": "6.0.4",
+            "FluentAssertions": "8.10.0",
+            "FluentValidation": "12.1.1",
+            "FluentValidation.AspNetCore": "11.3.1",
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
+            "Microsoft.AspNetCore.OpenApi": "10.0.9",
+            "Microsoft.EntityFrameworkCore": "10.0.11",
+            "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+            "Microsoft.Extensions.Hosting": "10.0.9",
+            "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
+            "OpenTelemetry.Extensions.Hosting": "1.18.0",
+            "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
+            "OpenTelemetry.Instrumentation.Http": "1.18.0",
+            "OpenTelemetry.Instrumentation.Runtime": "1.18.0",
+            "RabbitMQ.Client": "7.2.2",
+            "Serilog": "4.4.0",
+            "Serilog.AspNetCore": "10.0.0",
+            "Serilog.Extensions.Hosting": "10.0.0",
+            "StackExchange.Redis": "3.1.31",
+            "Testcontainers": "4.14.0",
+            "Testcontainers.PostgreSql": "4.14.0",
+            "Testcontainers.RabbitMq": "4.14.0",
+            "xunit": "2.9.3",
+            "xunit.runner.visualstudio": "3.1.4"
+          },
           "imports": [
             "net461",
             "net462",

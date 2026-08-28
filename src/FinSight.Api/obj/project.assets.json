@@ -1419,6 +1419,8 @@
       "packagesPath": "/home/raimi/.nuget/packages/",
       "outputPath": "/home/raimi/works/FinSight/src/FinSight.Api/obj/",
       "projectStyle": "PackageReference",
+      "centralPackageVersionsManagementEnabled": true,
+      "CentralPackageTransitivePinningEnabled": true,
       "configFilePaths": [
         "/home/raimi/.nuget/NuGet/NuGet.Config"
       ],
@@ -1463,36 +1465,72 @@
         "dependencies": {
           "FluentValidation.AspNetCore": {
             "target": "Package",
-            "version": "[11.3.1, )"
+            "version": "[11.3.1, )",
+            "versionCentrallyManaged": true
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
-            "version": "[10.0.9, )"
+            "version": "[10.0.9, )",
+            "versionCentrallyManaged": true
           },
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
             "target": "Package",
-            "version": "[1.18.0, )"
+            "version": "[1.18.0, )",
+            "versionCentrallyManaged": true
           },
           "OpenTelemetry.Extensions.Hosting": {
             "target": "Package",
-            "version": "[1.18.0, )"
+            "version": "[1.18.0, )",
+            "versionCentrallyManaged": true
           },
           "OpenTelemetry.Instrumentation.AspNetCore": {
             "target": "Package",
-            "version": "[1.18.0, )"
+            "version": "[1.18.0, )",
+            "versionCentrallyManaged": true
           },
           "OpenTelemetry.Instrumentation.Http": {
             "target": "Package",
-            "version": "[1.18.0, )"
+            "version": "[1.18.0, )",
+            "versionCentrallyManaged": true
           },
           "OpenTelemetry.Instrumentation.Runtime": {
             "target": "Package",
-            "version": "[1.18.0, )"
+            "version": "[1.18.0, )",
+            "versionCentrallyManaged": true
           },
           "Serilog.AspNetCore": {
             "target": "Package",
-            "version": "[10.0.0, )"
+            "version": "[10.0.0, )",
+            "versionCentrallyManaged": true
           }
+        },
+        "centralPackageVersions": {
+          "coverlet.collector": "6.0.4",
+          "FluentAssertions": "8.10.0",
+          "FluentValidation": "12.1.1",
+          "FluentValidation.AspNetCore": "11.3.1",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
+          "Microsoft.AspNetCore.OpenApi": "10.0.9",
+          "Microsoft.EntityFrameworkCore": "10.0.11",
+          "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+          "Microsoft.Extensions.Hosting": "10.0.9",
+          "Microsoft.NET.Test.Sdk": "17.14.1",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+          "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
+          "OpenTelemetry.Extensions.Hosting": "1.18.0",
+          "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
+          "OpenTelemetry.Instrumentation.Http": "1.18.0",
+          "OpenTelemetry.Instrumentation.Runtime": "1.18.0",
+          "RabbitMQ.Client": "7.2.2",
+          "Serilog": "4.4.0",
+          "Serilog.AspNetCore": "10.0.0",
+          "Serilog.Extensions.Hosting": "10.0.0",
+          "StackExchange.Redis": "3.1.31",
+          "Testcontainers": "4.14.0",
+          "Testcontainers.PostgreSql": "4.14.0",
+          "Testcontainers.RabbitMq": "4.14.0",
+          "xunit": "2.9.3",
+          "xunit.runner.visualstudio": "3.1.4"
         },
         "imports": [
           "net461",
@@ -1942,5 +1980,41 @@
         "net10.0"
       ]
     }
-  ]
+  ],
+  "centralTransitiveDependencyGroups": {
+    "net10.0": {
+      "FluentValidation": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[12.1.1, )"
+      },
+      "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[10.0.11, )"
+      },
+      "Microsoft.EntityFrameworkCore": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[10.0.11, )"
+      },
+      "Npgsql.EntityFrameworkCore.PostgreSQL": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[10.0.3, )"
+      },
+      "RabbitMQ.Client": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[7.2.2, )"
+      },
+      "Serilog": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[4.4.0, )"
+      },
+      "Serilog.Extensions.Hosting": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[10.0.0, )"
+      },
+      "StackExchange.Redis": {
+        "include": "Runtime, Compile, Native, BuildTransitive",
+        "version": "[3.1.31, )"
+      }
+    }
+  }
 }
