@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-FinSight.Workers-d7556720-5231-44cd-b9de-51fe3c2b4d8d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinSight.Application\FinSight.Application.csproj" />
+    <ProjectReference Include="..\FinSight.Infrastructure\FinSight.Infrastructure.csproj" />
+    <ProjectReference Include="..\FinSight.Contracts\FinSight.Contracts.csproj" />
+  </ItemGroup>
+</Project>

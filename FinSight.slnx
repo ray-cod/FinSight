@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FinSight.Api/FinSight.Api.csproj" />
+    <Project Path="src/FinSight.Application/FinSight.Application.csproj" />
+    <Project Path="src/FinSight.Contracts/FinSight.Contracts.csproj" />
+    <Project Path="src/FinSight.Domain/FinSight.Domain.csproj" />
+    <Project Path="src/FinSight.Infrastructure/FinSight.Infrastructure.csproj" />
+    <Project Path="src/FinSight.Workers/FinSight.Workers.csproj" />
+  </Folder>
+</Solution>

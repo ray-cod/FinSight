@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinSight.Application\FinSight.Application.csproj" />
+    <ProjectReference Include="..\FinSight.Domain\FinSight.Domain.csproj" />
+    <ProjectReference Include="..\FinSight.Contracts\FinSight.Contracts.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
