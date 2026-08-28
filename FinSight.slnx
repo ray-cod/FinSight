@@ -7,4 +7,11 @@
     <Project Path="src/FinSight.Infrastructure/FinSight.Infrastructure.csproj" />
     <Project Path="src/FinSight.Workers/FinSight.Workers.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FinSight.Application.Tests/FinSight.Application.Tests.csproj" />
+    <Project Path="tests/FinSight.Architecture.Tests/FinSight.Architecture.Tests.csproj" />
+    <Project Path="tests/FinSight.Domain.Tests/FinSight.Domain.Tests.csproj" />
+    <Project Path="tests/FinSight.Infrastructure.Tests/FinSight.Infrastructure.Tests.csproj" />
+    <Project Path="tests/FinSight.IntegrationTests/FinSight.IntegrationTests.csproj" />
+  </Folder>
 </Solution>
