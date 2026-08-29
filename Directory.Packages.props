@@ -42,7 +42,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.18.0" />
 
     <!-- Testing -->
-    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="FluentAssertions" Version="8.10.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Testcontainers" Version="4.14.0" />
