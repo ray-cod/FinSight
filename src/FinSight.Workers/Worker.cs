@@ -1,16 +1,21 @@
 namespace FinSight.Workers;
 
-public class Worker(ILogger<Worker> logger) : BackgroundService
+/// <summary>
+/// Background worker service for executing scheduled tasks.
+/// </summary>
+/// <param name="logger">The logger instance for this worker.</param>
+public partial class Worker(ILogger<Worker> logger) : BackgroundService
 {
+    /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (logger.IsEnabled(LogLevel.Information))
-            {
-                logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            }
+            LogWorkerRunning(logger, DateTimeOffset.Now);
             await Task.Delay(1000, stoppingToken);
         }
     }
+
+    [LoggerMessage(EventId = 1, Level = LogLevel.Information, Message = "Worker running at: {Time}")]
+    private static partial void LogWorkerRunning(ILogger logger, DateTimeOffset time);
 }
