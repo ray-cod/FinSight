@@ -37,6 +37,7 @@ jobs:
         with:
           global-json-file: global.json
           cache: true
+          cache-dependency-path: Directory.Packages.props
 
       - name: Restore dependencies
         run: dotnet restore FinSight.slnx
