@@ -1,0 +1,54 @@
+name: CD - Production
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deployment-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build production artifact
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+          cache: true
+
+      - name: Restore
+        run: dotnet restore FinSight.slnx
+
+      - name: Publish API
+        run: >
+          dotnet publish
+          src/FinSight.Api/FinSight.Api.csproj
+          --configuration Release
+          --no-restore
+          --output ./artifacts/api
+
+      - name: Publish Workers
+        run: >
+          dotnet publish
+          src/FinSight.Workers/FinSight.Workers.csproj
+          --configuration Release
+          --no-restore
+          --output ./artifacts/workers
+
+      - name: Upload production artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: finsight-production-${{ github.sha }}
+          path: artifacts/

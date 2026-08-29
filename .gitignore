@@ -1,37 +1,65 @@
-# .NET
+# Build output
 **/bin/
 **/obj/
-.vs/
+
+# Test output
 TestResults/
+**/TestResults/
+coverage/
+.coverage/
 
-# Rider / JetBrains
-.idea/
-*.sln.iml
-
-# VS Code
+# IDE
+.vs/
 .vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
-# Node
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper.*
+*.DotSettings.user
+
+# Node / Frontend
 node_modules/
 .next/
 out/
-coverage/
 .turbo/
 
-# Environment
+# Environment / Secrets
 .env
 .env.*
 !.env.example
+
+# Local certificates
+*.pfx
+*.p12
+*.key
+*.pem
+
+# Logs
+*.log
+logs/
+
+# Docker local data
+docker-data/
+*.pid
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Docker
-docker-data/
+# NuGet
+*.nupkg
+*.snupkg
 
-# Logs
-*.log
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
 
-# User secrets
-secrets/
+# Local tooling
+.dotnet/
