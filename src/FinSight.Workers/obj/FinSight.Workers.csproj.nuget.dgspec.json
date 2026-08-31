@@ -55,6 +55,11 @@
               "target": "Package",
               "version": "[12.1.1, )",
               "versionCentrallyManaged": true
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
             }
           },
           "centralPackageVersions": {
@@ -66,8 +71,12 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
-            "Microsoft.Extensions.Hosting": "10.0.9",
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
@@ -78,6 +87,7 @@
             "Serilog": "4.4.0",
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
+            "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
@@ -430,8 +440,12 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
-            "Microsoft.Extensions.Hosting": "10.0.9",
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
@@ -442,6 +456,7 @@
             "Serilog": "4.4.0",
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
+            "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
@@ -794,8 +809,12 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
-            "Microsoft.Extensions.Hosting": "10.0.9",
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
@@ -806,6 +825,7 @@
             "Serilog": "4.4.0",
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
+            "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
@@ -1177,6 +1197,21 @@
               "version": "[10.0.11, )",
               "versionCentrallyManaged": true
             },
+            "Microsoft.Extensions.Diagnostics.HealthChecks": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
+            },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[10.0.3, )",
@@ -1207,8 +1242,12 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
-            "Microsoft.Extensions.Hosting": "10.0.9",
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
@@ -1219,6 +1258,7 @@
             "Serilog": "4.4.0",
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
+            "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
@@ -1575,7 +1615,7 @@
           "dependencies": {
             "Microsoft.Extensions.Hosting": {
               "target": "Package",
-              "version": "[10.0.9, )",
+              "version": "[10.0.11, )",
               "versionCentrallyManaged": true
             },
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
@@ -1602,6 +1642,11 @@
               "target": "Package",
               "version": "[10.0.0, )",
               "versionCentrallyManaged": true
+            },
+            "Serilog.Settings.Configuration": {
+              "target": "Package",
+              "version": "[10.0.0, )",
+              "versionCentrallyManaged": true
             }
           },
           "centralPackageVersions": {
@@ -1613,8 +1658,12 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
-            "Microsoft.Extensions.Hosting": "10.0.9",
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
+            "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
+            "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
@@ -1625,6 +1674,7 @@
             "Serilog": "4.4.0",
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
+            "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
