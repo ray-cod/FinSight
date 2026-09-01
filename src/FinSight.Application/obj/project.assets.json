@@ -15,6 +15,23 @@
           }
         }
       },
+      "FluentValidation.DependencyInjectionExtensions/12.1.1": {
+        "type": "package",
+        "dependencies": {
+          "FluentValidation": "12.1.1",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.0"
+        },
+        "compile": {
+          "lib/net8.0/FluentValidation.DependencyInjectionExtensions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/FluentValidation.DependencyInjectionExtensions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.11": {
         "type": "package",
         "compile": {
@@ -59,6 +76,21 @@
         "lib/net8.0/FluentValidation.xml"
       ]
     },
+    "FluentValidation.DependencyInjectionExtensions/12.1.1": {
+      "sha512": "D0VXh4dtjjX2aQizuaa0g6R8X3U1JaVqJPfGCvLwZX9t/O2h7tkpbitbadQMfwcgSPdDbI2vDxuwRMv/Uf9dHA==",
+      "type": "package",
+      "path": "fluentvalidation.dependencyinjectionextensions/12.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "fluent-validation-icon.png",
+        "fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
+        "fluentvalidation.dependencyinjectionextensions.nuspec",
+        "lib/net8.0/FluentValidation.DependencyInjectionExtensions.dll",
+        "lib/net8.0/FluentValidation.DependencyInjectionExtensions.xml"
+      ]
+    },
     "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.11": {
       "sha512": "/a1aJz4m7ylhEDf25ugQChLQoN5XwoGjWw/BoR/ZWWKsO1v4DdJElS1uyngahz4B/eOzjFk1KNTkarRLE5wsIg==",
       "type": "package",
@@ -100,6 +132,7 @@
     "net10.0": [
       "FinSight.Domain >= 1.0.0",
       "FluentValidation >= 12.1.1",
+      "FluentValidation.DependencyInjectionExtensions >= 12.1.1",
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 10.0.11"
     ]
   },
@@ -158,6 +191,11 @@
             "version": "[12.1.1, )",
             "versionCentrallyManaged": true
           },
+          "FluentValidation.DependencyInjectionExtensions": {
+            "target": "Package",
+            "version": "[12.1.1, )",
+            "versionCentrallyManaged": true
+          },
           "Microsoft.Extensions.DependencyInjection.Abstractions": {
             "target": "Package",
             "version": "[10.0.11, )",
@@ -169,6 +207,8 @@
           "FluentAssertions": "8.10.0",
           "FluentValidation": "12.1.1",
           "FluentValidation.AspNetCore": "11.3.1",
+          "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
           "Microsoft.AspNetCore.OpenApi": "10.0.9",
           "Microsoft.EntityFrameworkCore": "10.0.11",
@@ -177,6 +217,7 @@
           "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
           "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
           "Microsoft.Extensions.Hosting": "10.0.11",
+          "Microsoft.Extensions.Identity.Core": "10.0.11",
           "Microsoft.NET.Test.Sdk": "17.14.1",
           "Microsoft.OpenApi": "2.7.5",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
@@ -191,6 +232,7 @@
           "Serilog.Extensions.Hosting": "10.0.0",
           "Serilog.Settings.Configuration": "10.0.0",
           "StackExchange.Redis": "3.1.31",
+          "System.IdentityModel.Tokens.Jwt": "8.19.2",
           "Testcontainers": "4.14.0",
           "Testcontainers.PostgreSql": "4.14.0",
           "Testcontainers.RabbitMq": "4.14.0",
