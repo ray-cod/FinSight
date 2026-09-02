@@ -1,3 +1,6 @@
+using FinSight.Application.Features.Accounts;
+using FinSight.Application.Features.Institutions;
+using FinSight.Application.Features.Transactions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +21,11 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);
+
+        services.AddScoped<AccountService>();
+        services.AddScoped<AccountSyncService>();
+        services.AddScoped<InstitutionService>();
+        services.AddScoped<TransactionService>();
 
         return services;
     }

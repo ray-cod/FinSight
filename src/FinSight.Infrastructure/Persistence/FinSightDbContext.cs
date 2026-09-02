@@ -1,3 +1,6 @@
+using FinSight.Domain.Accounts;
+using FinSight.Domain.Common;
+using FinSight.Domain.Transactions;
 using FinSight.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -26,6 +29,17 @@ public sealed class FinSightDbContext(
         ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Ignore<DomainEvent>();
+
+        builder.Entity<FinancialAccount>()
+            .Ignore(x => x.DomainEvents);
+
+        builder.Entity<AccountConnection>()
+            .Ignore(x => x.DomainEvents);
+
+        builder.Entity<Transaction>()
+            .Ignore(x => x.DomainEvents);
 
         builder.ApplyConfigurationsFromAssembly(
             typeof(FinSightDbContext).Assembly);
