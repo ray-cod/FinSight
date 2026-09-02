@@ -69,7 +69,7 @@
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[10.0.9, )",
+              "version": "[10.0.11, )",
               "versionCentrallyManaged": true
             },
             "Microsoft.EntityFrameworkCore.Design": {
@@ -116,14 +116,14 @@
             }
           },
           "centralPackageVersions": {
-            "coverlet.collector": "6.0.4",
+            "coverlet.collector": "10.0.1",
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
-            "Microsoft.AspNetCore.OpenApi": "10.0.9",
+            "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -131,7 +131,8 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
-            "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+            "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
@@ -144,13 +145,14 @@
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
+            "Serilog.Sinks.Console": "6.1.1",
             "StackExchange.Redis": "3.1.31",
             "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
             "xunit": "2.9.3",
-            "xunit.runner.visualstudio": "3.1.4"
+            "xunit.runner.visualstudio": "4.0.0"
           },
           "imports": [
             "net461",
@@ -614,6 +616,9 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
+              "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj": {
+                "projectPath": "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj"
+              },
               "/home/raimi/works/FinSight/src/FinSight.Domain/FinSight.Domain.csproj": {
                 "projectPath": "/home/raimi/works/FinSight/src/FinSight.Domain/FinSight.Domain.csproj"
               }
@@ -650,17 +655,22 @@
               "target": "Package",
               "version": "[10.0.11, )",
               "versionCentrallyManaged": true
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
             }
           },
           "centralPackageVersions": {
-            "coverlet.collector": "6.0.4",
+            "coverlet.collector": "10.0.1",
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
-            "Microsoft.AspNetCore.OpenApi": "10.0.9",
+            "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -668,7 +678,8 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
-            "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+            "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
@@ -681,13 +692,14 @@
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
+            "Serilog.Sinks.Console": "6.1.1",
             "StackExchange.Redis": "3.1.31",
             "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
             "xunit": "2.9.3",
-            "xunit.runner.visualstudio": "3.1.4"
+            "xunit.runner.visualstudio": "4.0.0"
           },
           "imports": [
             "net461",
@@ -1026,14 +1038,14 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "centralPackageVersions": {
-            "coverlet.collector": "6.0.4",
+            "coverlet.collector": "10.0.1",
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
-            "Microsoft.AspNetCore.OpenApi": "10.0.9",
+            "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -1041,7 +1053,8 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
-            "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+            "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
@@ -1054,13 +1067,14 @@
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
+            "Serilog.Sinks.Console": "6.1.1",
             "StackExchange.Redis": "3.1.31",
             "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
             "xunit": "2.9.3",
-            "xunit.runner.visualstudio": "3.1.4"
+            "xunit.runner.visualstudio": "4.0.0"
           },
           "imports": [
             "net461",
@@ -1399,14 +1413,14 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "centralPackageVersions": {
-            "coverlet.collector": "6.0.4",
+            "coverlet.collector": "10.0.1",
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
-            "Microsoft.AspNetCore.OpenApi": "10.0.9",
+            "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -1414,7 +1428,8 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
-            "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+            "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
@@ -1427,13 +1442,14 @@
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
+            "Serilog.Sinks.Console": "6.1.1",
             "StackExchange.Redis": "3.1.31",
             "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
             "xunit": "2.9.3",
-            "xunit.runner.visualstudio": "3.1.4"
+            "xunit.runner.visualstudio": "4.0.0"
           },
           "imports": [
             "net461",
@@ -1851,14 +1867,14 @@
             }
           },
           "centralPackageVersions": {
-            "coverlet.collector": "6.0.4",
+            "coverlet.collector": "10.0.1",
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
-            "Microsoft.AspNetCore.OpenApi": "10.0.9",
+            "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
@@ -1866,7 +1882,8 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
-            "Microsoft.NET.Test.Sdk": "17.14.1",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+            "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
@@ -1879,13 +1896,14 @@
             "Serilog.AspNetCore": "10.0.0",
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
+            "Serilog.Sinks.Console": "6.1.1",
             "StackExchange.Redis": "3.1.31",
             "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
             "xunit": "2.9.3",
-            "xunit.runner.visualstudio": "3.1.4"
+            "xunit.runner.visualstudio": "4.0.0"
           },
           "imports": [
             "net461",

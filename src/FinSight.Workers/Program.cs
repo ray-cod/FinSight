@@ -1,5 +1,6 @@
 using FinSight.Application;
 using FinSight.Infrastructure;
+using FinSight.Workers.Workers;
 using Serilog;
 
 var builder =
@@ -15,13 +16,17 @@ builder.Services.AddSerilog(
             .Enrich.FromLogContext();
     });
 
-builder.Services
-    .AddApplication();
+builder.Services.AddApplication();
 
-builder.Services
-    .AddInfrastructure(
-        builder.Configuration);
+builder.Services.AddInfrastructure(
+    builder.Configuration,
+    configureAuthentication: false,
+    configureIdentity: false);
 
-var host = builder.Build();
+builder.Services.AddHostedService<
+    BankSyncWorker>();
+
+var host =
+    builder.Build();
 
 await host.RunAsync();

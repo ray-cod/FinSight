@@ -1,32 +1,45 @@
 root = true
 
+# Global settings for all files
 [*]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
+trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 
-[src/FinSight.Infrastructure/Persistence/Migrations/**.cs]
-charset = unset
-
+# C# Source Files
 [*.cs]
 indent_size = 4
 
+# Organize Imports
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
 
-dotnet_diagnostic.IDE0055.severity = warning
-dotnet_diagnostic.IDE0060.severity = warning
+# Code Style Conventions
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_primary_constructors = true:suggestion
 
+# Analyzer Severity Overrides
+dotnet_diagnostic.IDE0055.severity = warning # Formatting
+dotnet_diagnostic.IDE0060.severity = warning # Unused parameters
+
+# EF Core Auto-Generated Migrations
+[**/Migrations/*.cs]
+generated_code = true
+charset = unset
+dotnet_analyzer_diagnostic.severity = none
+dotnet_diagnostic.CA1861.severity = none
+
+# JSON Configuration Files
 [*.json]
 indent_size = 2
 
-[*.yml]
+# YAML Files
+[*.{yml,yaml}]
 indent_size = 2
 
-[*.yaml]
-indent_size = 2
-
+# Markdown Files
 [*.md]
 trim_trailing_whitespace = false

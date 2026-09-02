@@ -2,12 +2,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FinSight.Domain\FinSight.Domain.csproj" />
+    <ProjectReference Include="..\FinSight.Contracts\FinSight.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
   <PropertyGroup>

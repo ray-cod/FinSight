@@ -3,6 +3,7 @@ using FinSight.Api.Middleware;
 using FinSight.Application;
 using FinSight.Infrastructure;
 using FinSight.Infrastructure.Identity;
+using FinSight.Infrastructure.Persistence.Seed;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
@@ -41,6 +42,22 @@ using (var scope = app.Services.CreateScope())
             .GetRequiredService<IdentitySeedService>();
 
     await identitySeedService.SeedAsync();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var identitySeeder =
+        scope.ServiceProvider
+            .GetRequiredService<IdentitySeedService>();
+
+    await identitySeeder.SeedAsync();
+
+    var financialSeeder =
+        scope.ServiceProvider
+            .GetRequiredService<
+                FinancialSeedService>();
+
+    await financialSeeder.SeedAsync();
 }
 
 app.UseMiddleware<CorrelationIdMiddleware>();
