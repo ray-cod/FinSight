@@ -1,14 +1,19 @@
+using FinSight.Application.Abstractions.Banking;
 using FinSight.Application.Abstractions.Caching;
 using FinSight.Application.Abstractions.Identity;
+using FinSight.Application.Abstractions.Messaging;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Application.Abstractions.Security;
 using FinSight.Infrastructure.Audit;
+using FinSight.Infrastructure.Banking.MockBank;
 using FinSight.Infrastructure.Caching.Redis;
 using FinSight.Infrastructure.Configuration;
 using FinSight.Infrastructure.Health;
 using FinSight.Infrastructure.Identity;
 using FinSight.Infrastructure.Messaging.RabbitMq;
 using FinSight.Infrastructure.Persistence;
+using FinSight.Infrastructure.Persistence.Repositories;
+using FinSight.Infrastructure.Persistence.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,15 +38,23 @@ public static class DependencyInjection
     /// <param name="configuration">
     /// The application configuration.
     /// </param>
+    /// <param name="configureAuthentication">
+    /// A boolean indicating whether to configure JWT authentication. Defaults to true.
+    /// </param>
+    /// <param name="configureIdentity">
+    /// A boolean indicating whether to configure ASP.NET Core Identity. Defaults to true.
+    /// </param>
     /// <returns>
     /// The modified <see cref="IServiceCollection"/> instance.
     /// </returns>
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        bool configureAuthentication = true,
+        bool configureIdentity = true)
     {
         AddOptions(
-            services);
+            services, configureAuthentication);
 
         AddDatabase(
             services);
@@ -52,11 +65,23 @@ public static class DependencyInjection
         AddRabbitMq(
             services);
 
-        AddIdentity(
-            services);
+        if (configureIdentity)
+        {
+            AddIdentity(
+                services);
+        }
 
-        services.AddJwtAuthentication(
-            configuration);
+        if (configureAuthentication)
+        {
+            services.AddJwtAuthentication(
+                configuration);
+        }
+
+        AddBanking(services);
+
+        AddRepositories(services);
+
+        services.AddScoped<FinancialSeedService>();
 
         AddHealthChecks(
             services);
@@ -65,7 +90,7 @@ public static class DependencyInjection
     }
 
     private static void AddOptions(
-        IServiceCollection services)
+        IServiceCollection services, bool configureAuthentication)
     {
         services
             .AddOptions<DatabaseOptions>()
@@ -110,30 +135,34 @@ public static class DependencyInjection
                 "RabbitMQ password is required.")
             .ValidateOnStart();
 
-        services
-            .AddOptions<JwtOptions>()
-            .BindConfiguration(
-                JwtOptions.SectionName)
-            .Validate(
-                options =>
-                    !string.IsNullOrWhiteSpace(
-                        options.Issuer),
-                "JWT issuer is required.")
-            .Validate(
-                options =>
-                    !string.IsNullOrWhiteSpace(
-                        options.Audience),
-                "JWT audience is required.")
-            .Validate(
-                options =>
-                    !string.IsNullOrWhiteSpace(
-                        options.SigningKey),
-                "JWT signing key is required.")
-            .Validate(
-                options =>
-                    options.SigningKey.Length >= 64,
-                "JWT signing key must contain at least 64 characters.")
-            .ValidateOnStart();
+        if (configureAuthentication)
+        {
+            services
+                .AddOptions<JwtOptions>()
+                .BindConfiguration(
+                    JwtOptions.SectionName)
+                .Validate(
+                    options =>
+                        !string.IsNullOrWhiteSpace(
+                            options.Issuer),
+                    "JWT issuer is required.")
+                .Validate(
+                    options =>
+                        !string.IsNullOrWhiteSpace(
+                            options.Audience),
+                    "JWT audience is required.")
+                .Validate(
+                    options =>
+                        !string.IsNullOrWhiteSpace(
+                            options.SigningKey),
+                    "JWT signing key is required.")
+                .Validate(
+                    options =>
+                        options.SigningKey is not null &&
+                        options.SigningKey.Length >= 64,
+                    "JWT signing key must contain at least 64 characters.")
+                .ValidateOnStart();
+        }
     }
 
     private static void AddDatabase(
@@ -194,6 +223,10 @@ public static class DependencyInjection
                     .GetRequiredService<
                         RabbitMqConnectionProvider>());
 
+        services.AddScoped<
+            IEventPublisher,
+            RabbitMqEventPublisher>();
+
         services.AddHostedService<
             RabbitMqTopologyHostedService>();
     }
@@ -220,6 +253,38 @@ public static class DependencyInjection
         services.AddScoped<IAuditService, AuditService>();
 
         services.AddScoped<IdentitySeedService>();
+    }
+
+    private static void AddBanking(
+        IServiceCollection services)
+    {
+        services.AddScoped<
+            IBankProvider,
+            MockBankProvider>();
+
+        services.AddScoped<
+            IBankTransactionProvider,
+            MockBankTransactionProvider>();
+    }
+
+    private static void AddRepositories(
+        IServiceCollection services)
+    {
+        services.AddScoped<
+            IInstitutionRepository,
+            InstitutionRepository>();
+
+        services.AddScoped<
+            IAccountConnectionRepository,
+            AccountConnectionRepository>();
+
+        services.AddScoped<
+            IFinancialAccountRepository,
+            FinancialAccountRepository>();
+
+        services.AddScoped<
+            ITransactionRepository,
+            TransactionRepository>();
     }
 
     private static void AddHealthChecks(
