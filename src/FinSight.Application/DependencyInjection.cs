@@ -1,20 +1,24 @@
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FinSight.Application;
 
 /// <summary>
-/// Provides extension methods for registering Application layer services in the dependency injection container.
+/// Provides dependency registration for the application layer.
 /// </summary>
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registers Application layer components into the provided <see cref="IServiceCollection"/>.
+    /// Registers FinSight application services.
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
-    /// <returns>The updated <see cref="IServiceCollection"/> instance for method chaining.</returns>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddApplication(
         this IServiceCollection services)
     {
+        services.AddValidatorsFromAssembly(
+            typeof(DependencyInjection).Assembly);
+
         return services;
     }
 }

@@ -1,10 +1,15 @@
 using FinSight.Application.Abstractions.Caching;
+using FinSight.Application.Abstractions.Identity;
 using FinSight.Application.Abstractions.Persistence;
+using FinSight.Application.Abstractions.Security;
+using FinSight.Infrastructure.Audit;
 using FinSight.Infrastructure.Caching.Redis;
 using FinSight.Infrastructure.Configuration;
 using FinSight.Infrastructure.Health;
+using FinSight.Infrastructure.Identity;
 using FinSight.Infrastructure.Messaging.RabbitMq;
 using FinSight.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,12 +24,21 @@ namespace FinSight.Infrastructure;
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registers infrastructure services including persistence, Redis caching, RabbitMQ messaging, options validation, and health checks.
+    /// Registers infrastructure services including persistence, Redis caching, RabbitMQ messaging,
+    /// ASP.NET Core Identity, JWT authentication, options validation, and health checks.
     /// </summary>
-    /// <param name="services">The service collection to add infrastructure dependencies to.</param>
-    /// <returns>The modified <see cref="IServiceCollection"/> instance.</returns>
+    /// <param name="services">
+    /// The service collection to add infrastructure dependencies to.
+    /// </param>
+    /// <param name="configuration">
+    /// The application configuration.
+    /// </param>
+    /// <returns>
+    /// The modified <see cref="IServiceCollection"/> instance.
+    /// </returns>
     public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services)
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         AddOptions(
             services);
@@ -38,6 +52,12 @@ public static class DependencyInjection
         AddRabbitMq(
             services);
 
+        AddIdentity(
+            services);
+
+        services.AddJwtAuthentication(
+            configuration);
+
         AddHealthChecks(
             services);
 
@@ -49,7 +69,8 @@ public static class DependencyInjection
     {
         services
             .AddOptions<DatabaseOptions>()
-            .BindConfiguration(DatabaseOptions.SectionName)
+            .BindConfiguration(
+                DatabaseOptions.SectionName)
             .Validate(
                 options =>
                     !string.IsNullOrWhiteSpace(
@@ -59,7 +80,8 @@ public static class DependencyInjection
 
         services
             .AddOptions<RedisOptions>()
-            .BindConfiguration(RedisOptions.SectionName)
+            .BindConfiguration(
+                RedisOptions.SectionName)
             .Validate(
                 options =>
                     !string.IsNullOrWhiteSpace(
@@ -69,19 +91,48 @@ public static class DependencyInjection
 
         services
             .AddOptions<RabbitMqOptions>()
-            .BindConfiguration(RabbitMqOptions.SectionName)
+            .BindConfiguration(
+                RabbitMqOptions.SectionName)
             .Validate(
                 options =>
-                    !string.IsNullOrWhiteSpace(options.Host),
+                    !string.IsNullOrWhiteSpace(
+                        options.Host),
                 "RabbitMQ host is required.")
             .Validate(
                 options =>
-                    !string.IsNullOrWhiteSpace(options.Username),
+                    !string.IsNullOrWhiteSpace(
+                        options.Username),
                 "RabbitMQ username is required.")
             .Validate(
                 options =>
-                    !string.IsNullOrWhiteSpace(options.Password),
+                    !string.IsNullOrWhiteSpace(
+                        options.Password),
                 "RabbitMQ password is required.")
+            .ValidateOnStart();
+
+        services
+            .AddOptions<JwtOptions>()
+            .BindConfiguration(
+                JwtOptions.SectionName)
+            .Validate(
+                options =>
+                    !string.IsNullOrWhiteSpace(
+                        options.Issuer),
+                "JWT issuer is required.")
+            .Validate(
+                options =>
+                    !string.IsNullOrWhiteSpace(
+                        options.Audience),
+                "JWT audience is required.")
+            .Validate(
+                options =>
+                    !string.IsNullOrWhiteSpace(
+                        options.SigningKey),
+                "JWT signing key is required.")
+            .Validate(
+                options =>
+                    options.SigningKey.Length >= 64,
+                "JWT signing key must contain at least 64 characters.")
             .ValidateOnStart();
     }
 
@@ -145,6 +196,30 @@ public static class DependencyInjection
 
         services.AddHostedService<
             RabbitMqTopologyHostedService>();
+    }
+
+    private static void AddIdentity(
+        IServiceCollection services)
+    {
+        services
+            .AddIdentityCore<ApplicationUser>(
+                IdentityConfiguration.Configure)
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<FinSightDbContext>()
+            .AddSignInManager()
+            .AddDefaultTokenProviders();
+
+        services.AddScoped<IAuthService, IdentityService>();
+
+        services.AddScoped<IUserService, UserService>();
+
+        services.AddScoped<ITokenService, JwtTokenService>();
+
+        services.AddScoped<IPasswordResetService, PasswordResetService>();
+
+        services.AddScoped<IAuditService, AuditService>();
+
+        services.AddScoped<IdentitySeedService>();
     }
 
     private static void AddHealthChecks(
