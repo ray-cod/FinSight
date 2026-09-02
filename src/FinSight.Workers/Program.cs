@@ -19,7 +19,8 @@ builder.Services
     .AddApplication();
 
 builder.Services
-    .AddInfrastructure();
+    .AddInfrastructure(
+        builder.Configuration);
 
 var host = builder.Build();
 

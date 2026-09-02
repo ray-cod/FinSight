@@ -2,6 +2,7 @@ using FinSight.Api.Extensions;
 using FinSight.Api.Middleware;
 using FinSight.Application;
 using FinSight.Infrastructure;
+using FinSight.Infrastructure.Identity;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
@@ -22,7 +23,8 @@ builder.Services
     .AddApplication();
 
 builder.Services
-    .AddInfrastructure();
+    .AddInfrastructure(
+        builder.Configuration);
 
 builder.Services
     .AddFinSightApi();
@@ -31,6 +33,15 @@ builder.Services
     .AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var identitySeedService =
+        scope.ServiceProvider
+            .GetRequiredService<IdentitySeedService>();
+
+    await identitySeedService.SeedAsync();
+}
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 
@@ -44,6 +55,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseRateLimiter();
 
@@ -71,5 +86,7 @@ app.MapHealthChecks(
 
 app.MapControllers()
     .RequireRateLimiting("api");
+
+await app.RunAsync();
 
 app.Run();

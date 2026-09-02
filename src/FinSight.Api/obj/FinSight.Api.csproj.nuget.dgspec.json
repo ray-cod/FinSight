@@ -62,6 +62,11 @@
               "version": "[11.3.1, )",
               "versionCentrallyManaged": true
             },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.9, )",
@@ -115,6 +120,8 @@
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
+            "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
@@ -123,6 +130,7 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
@@ -137,6 +145,7 @@
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
+            "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
@@ -632,6 +641,11 @@
               "version": "[12.1.1, )",
               "versionCentrallyManaged": true
             },
+            "FluentValidation.DependencyInjectionExtensions": {
+              "target": "Package",
+              "version": "[12.1.1, )",
+              "versionCentrallyManaged": true
+            },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
               "version": "[10.0.11, )",
@@ -643,6 +657,8 @@
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
+            "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
@@ -651,6 +667,7 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
@@ -665,6 +682,7 @@
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
+            "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
@@ -1012,6 +1030,8 @@
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
+            "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
@@ -1020,6 +1040,7 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
@@ -1034,6 +1055,7 @@
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
+            "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
@@ -1381,6 +1403,8 @@
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
+            "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
@@ -1389,6 +1413,7 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
@@ -1403,6 +1428,7 @@
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
+            "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
@@ -1756,6 +1782,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[10.0.11, )",
@@ -1788,6 +1819,11 @@
               "version": "[10.0.11, )",
               "versionCentrallyManaged": true
             },
+            "Microsoft.Extensions.Identity.Core": {
+              "target": "Package",
+              "version": "[10.0.11, )",
+              "versionCentrallyManaged": true
+            },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[10.0.3, )",
@@ -1807,6 +1843,11 @@
               "target": "Package",
               "version": "[3.1.31, )",
               "versionCentrallyManaged": true
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.19.2, )",
+              "versionCentrallyManaged": true
             }
           },
           "centralPackageVersions": {
@@ -1814,6 +1855,8 @@
             "FluentAssertions": "8.10.0",
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
+            "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.9",
             "Microsoft.EntityFrameworkCore": "10.0.11",
@@ -1822,6 +1865,7 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.NET.Test.Sdk": "17.14.1",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
@@ -1836,6 +1880,7 @@
             "Serilog.Extensions.Hosting": "10.0.0",
             "Serilog.Settings.Configuration": "10.0.0",
             "StackExchange.Redis": "3.1.31",
+            "System.IdentityModel.Tokens.Jwt": "8.19.2",
             "Testcontainers": "4.14.0",
             "Testcontainers.PostgreSql": "4.14.0",
             "Testcontainers.RabbitMq": "4.14.0",
