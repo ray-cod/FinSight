@@ -64,6 +64,7 @@ public sealed class MockBankTransactionProvider
         MockBankTransaction transaction)
     {
         return new BankTransactionData(
+            transaction.AccountId,
             transaction.ExternalTransactionId,
             transaction.Description,
             transaction.Amount,

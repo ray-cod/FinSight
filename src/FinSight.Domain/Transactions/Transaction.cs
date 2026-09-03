@@ -34,13 +34,22 @@ public sealed class Transaction
             providerTransactionId.Trim();
         RawDescription =
             rawDescription.Trim();
+
+        NormalizedDescription =
+            RawDescription;
+
         Amount = amount;
         Currency =
             currency.Trim().ToUpperInvariant();
+
         TransactionDate = transactionDate;
         Type = type;
         Status = status;
         Fingerprint = fingerprint;
+        ClassificationStatus =
+            ClassificationStatus.Pending;
+        ClassificationSource =
+            ClassificationSource.None;
         ImportedAt = DateTimeOffset.UtcNow;
     }
 
@@ -65,9 +74,29 @@ public sealed class Transaction
     public string ProviderTransactionId { get; private set; } = null!;
 
     /// <summary>
-    /// Gets the original transaction description received from the bank.
+    /// Gets the original transaction description received from the provider.
     /// </summary>
     public string RawDescription { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the normalized transaction description.
+    /// </summary>
+    public string NormalizedDescription { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the normalized merchant identifier.
+    /// </summary>
+    public Guid? MerchantId { get; private set; }
+
+    /// <summary>
+    /// Gets the assigned category identifier.
+    /// </summary>
+    public Guid? CategoryId { get; private set; }
+
+    /// <summary>
+    /// Gets the assigned subcategory identifier.
+    /// </summary>
+    public Guid? SubcategoryId { get; private set; }
 
     /// <summary>
     /// Gets the signed transaction amount.
@@ -95,30 +124,43 @@ public sealed class Transaction
     public TransactionStatus Status { get; private set; }
 
     /// <summary>
-    /// Gets the fingerprint used to detect duplicate imports.
+    /// Gets the duplicate-detection fingerprint.
     /// </summary>
     public string Fingerprint { get; private set; } = null!;
 
     /// <summary>
-    /// Gets the timestamp at which FinSight imported the transaction.
+    /// Gets the transaction import timestamp.
     /// </summary>
     public DateTimeOffset ImportedAt { get; private set; }
 
     /// <summary>
+    /// Gets the classification status.
+    /// </summary>
+    public ClassificationStatus ClassificationStatus { get; private set; }
+
+    /// <summary>
+    /// Gets the classification source.
+    /// </summary>
+    public ClassificationSource ClassificationSource { get; private set; }
+
+    /// <summary>
+    /// Gets the classifier's confidence score.
+    /// </summary>
+    public decimal? ClassificationConfidence { get; private set; }
+
+    /// <summary>
+    /// Gets the classification timestamp.
+    /// </summary>
+    public DateTimeOffset? ClassifiedAt { get; private set; }
+
+    /// <summary>
+    /// Gets the timestamp at which the user corrected the classification.
+    /// </summary>
+    public DateTimeOffset? UserCorrectedAt { get; private set; }
+
+    /// <summary>
     /// Creates an imported transaction.
     /// </summary>
-    /// <param name="userId">The owning user.</param>
-    /// <param name="accountId">The financial account.</param>
-    /// <param name="institutionId">The financial institution.</param>
-    /// <param name="providerTransactionId">Provider transaction identifier.</param>
-    /// <param name="rawDescription">Raw provider description.</param>
-    /// <param name="amount">Signed transaction amount.</param>
-    /// <param name="currency">ISO currency code.</param>
-    /// <param name="transactionDate">Transaction timestamp.</param>
-    /// <param name="type">Transaction type.</param>
-    /// <param name="status">Transaction status.</param>
-    /// <param name="fingerprint">Duplicate-detection fingerprint.</param>
-    /// <returns>A new imported transaction.</returns>
     public static Transaction CreateImported(
         Guid userId,
         Guid accountId,
@@ -165,13 +207,6 @@ public sealed class Transaction
         ArgumentException.ThrowIfNullOrWhiteSpace(
             fingerprint);
 
-        if (currency.Trim().Length != 3)
-        {
-            throw new ArgumentException(
-                "Currency must be a three-letter ISO code.",
-                nameof(currency));
-        }
-
         return new Transaction(
             TransactionId.New(),
             userId,
@@ -185,5 +220,113 @@ public sealed class Transaction
             type,
             status,
             fingerprint);
+    }
+
+    /// <summary>
+    /// Updates the normalized description.
+    /// </summary>
+    /// <param name="normalizedDescription">
+    /// The normalized description.
+    /// </param>
+    public void NormalizeDescription(
+        string normalizedDescription)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            normalizedDescription);
+
+        NormalizedDescription =
+            normalizedDescription.Trim();
+    }
+
+    /// <summary>
+    /// Applies a machine-generated transaction classification.
+    /// </summary>
+    /// <param name="merchantId">
+    /// The normalized merchant identifier.
+    /// </param>
+    /// <param name="categoryId">
+    /// The category identifier.
+    /// </param>
+    /// <param name="subcategoryId">
+    /// The optional subcategory identifier.
+    /// </param>
+    /// <param name="source">
+    /// The classification source.
+    /// </param>
+    /// <param name="confidence">
+    /// The classifier confidence score.
+    /// </param>
+    public void ApplyClassification(
+        Guid? merchantId,
+        Guid? categoryId,
+        Guid? subcategoryId,
+        ClassificationSource source,
+        decimal confidence)
+    {
+        if (confidence < 0m ||
+            confidence > 1m)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(confidence));
+        }
+
+        MerchantId = merchantId;
+        CategoryId = categoryId;
+        SubcategoryId = subcategoryId;
+        ClassificationSource = source;
+        ClassificationConfidence = confidence;
+
+        ClassificationStatus =
+            confidence >= 0.85m
+                ? ClassificationStatus.Classified
+                : ClassificationStatus.Uncertain;
+
+        ClassifiedAt =
+            DateTimeOffset.UtcNow;
+    }
+
+    /// <summary>
+    /// Applies an explicit user classification.
+    /// </summary>
+    /// <param name="merchantId">The merchant identifier.</param>
+    /// <param name="categoryId">The category identifier.</param>
+    /// <param name="subcategoryId">
+    /// The optional subcategory identifier.
+    /// </param>
+    public void ApplyUserCorrection(
+        Guid? merchantId,
+        Guid categoryId,
+        Guid? subcategoryId)
+    {
+        if (categoryId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "Category identifier cannot be empty.",
+                nameof(categoryId));
+        }
+
+        MerchantId = merchantId;
+        CategoryId = categoryId;
+        SubcategoryId = subcategoryId;
+        ClassificationSource =
+            ClassificationSource.User;
+        ClassificationStatus =
+            ClassificationStatus.UserCorrected;
+        ClassificationConfidence = 1m;
+        ClassifiedAt =
+            DateTimeOffset.UtcNow;
+        UserCorrectedAt =
+            DateTimeOffset.UtcNow;
+    }
+
+    /// <summary>
+    /// Marks classification as failed.
+    /// </summary>
+    public void MarkClassificationFailed()
+    {
+        ClassificationStatus =
+            ClassificationStatus.Failed;
+        ClassificationSource =
+            ClassificationSource.None;
     }
 }
