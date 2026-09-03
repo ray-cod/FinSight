@@ -93,10 +93,6 @@ public static class DependencyInjection
 
         AddAi(services);
 
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-        services.AddScoped<IMerchantRepository, MerchantRepository>();
-
         services.AddScoped<TransactionProcessingService>();
 
         services.AddScoped<MerchantResolutionService>();
@@ -305,6 +301,18 @@ public static class DependencyInjection
         services.AddScoped<
             ITransactionRepository,
             TransactionRepository>();
+
+        services.AddScoped<
+            ISubscriptionRepository,
+            SubscriptionRepository>();
+
+        services.AddScoped<
+            IMerchantRepository,
+            MerchantRepository>();
+
+        services.AddScoped<
+            ICategoryRepository,
+            CategoryRepository>();
     }
 
     private static void AddAi(

@@ -60,4 +60,16 @@ public sealed class MerchantRepository(
         dbContext.Set<MerchantAlias>()
             .Add(merchantAlias);
     }
+
+    /// <inheritdoc />
+    public Task<Merchant?> GetByIdAsync(
+        Guid merchantId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.Set<Merchant>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
+                x => x.Id == merchantId,
+                cancellationToken);
+    }
 }

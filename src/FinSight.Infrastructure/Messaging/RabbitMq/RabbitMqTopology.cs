@@ -32,6 +32,12 @@ public static class RabbitMqTopology
         "finsight.transaction-categorization";
 
     /// <summary>
+    /// The queue name for subscription detection messages.
+    /// </summary>
+    public const string SubscriptionDetectionQueue =
+    "finsight.subscription-detection";
+
+    /// <summary>
     /// Asynchronously initializes exchange declarations, dead-letter queues, and bindings on the RabbitMQ broker.
     /// </summary>
     /// <param name="connection">The active RabbitMQ connection used to create topology channels.</param>
@@ -92,6 +98,24 @@ public static class RabbitMqTopology
             TransactionCategorizationQueue,
             ExchangeName,
             "transaction.imported",
+            cancellationToken: cancellationToken);
+
+        await channel.QueueDeclareAsync(
+            SubscriptionDetectionQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: new Dictionary<string, object?>
+            {
+                ["x-queue-type"] = "quorum",
+                ["x-dead-letter-exchange"] = DeadLetterExchangeName
+            },
+            cancellationToken: cancellationToken);
+
+        await channel.QueueBindAsync(
+            SubscriptionDetectionQueue,
+            ExchangeName,
+            "transaction.categorized",
             cancellationToken: cancellationToken);
     }
 }

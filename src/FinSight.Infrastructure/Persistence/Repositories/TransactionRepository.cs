@@ -65,4 +65,31 @@ public sealed class TransactionRepository(
                     x.Id.Value == transactionId,
                 cancellationToken);
     }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Transaction>>
+        GetByMerchantAsync(
+            Guid userId,
+            Guid merchantId,
+            string currency,
+            int limit = 36,
+            CancellationToken cancellationToken = default)
+    {
+        limit = Math.Clamp(limit, 2, 100);
+
+        return await dbContext.Set<Transaction>()
+            .AsNoTracking()
+            .Where(
+                x =>
+                    x.UserId == userId &&
+                    x.MerchantId == merchantId &&
+                    x.Currency == currency &&
+                    x.Type == TransactionType.Purchase &&
+                    x.Amount < 0)
+            .OrderByDescending(
+                x => x.TransactionDate)
+            .Take(limit)
+            .ToListAsync(
+                cancellationToken);
+    }
 }
