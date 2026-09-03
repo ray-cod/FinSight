@@ -39,11 +39,19 @@ public sealed class TransactionService(
                         transaction.Id.Value,
                         transaction.ProviderTransactionId,
                         transaction.RawDescription,
+                        transaction.NormalizedDescription,
+                        transaction.MerchantId,
+                        transaction.CategoryId,
+                        transaction.SubcategoryId,
                         transaction.Amount,
                         transaction.Currency,
                         transaction.TransactionDate,
                         transaction.Type,
-                        transaction.Status))
+                        transaction.Status,
+                        transaction.ClassificationStatus,
+                        transaction.ClassificationSource,
+                        transaction.ClassificationConfidence,
+                        transaction.ClassifiedAt))
             .ToArray();
     }
 }
@@ -55,8 +63,16 @@ public sealed record TransactionResponse(
     Guid Id,
     string ProviderTransactionId,
     string RawDescription,
+    string NormalizedDescription,
+    Guid? MerchantId,
+    Guid? CategoryId,
+    Guid? SubcategoryId,
     decimal Amount,
     string Currency,
     DateTimeOffset TransactionDate,
     TransactionType Type,
-    TransactionStatus Status);
+    TransactionStatus Status,
+    ClassificationStatus ClassificationStatus,
+    ClassificationSource ClassificationSource,
+    decimal? ClassificationConfidence,
+    DateTimeOffset? ClassifiedAt);

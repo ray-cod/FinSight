@@ -20,9 +20,8 @@ public sealed class TransactionConfiguration
 
         builder.Property(x => x.Id)
             .HasConversion(
-                transactionId => transactionId.Value,
-                value => new TransactionId(value))
-            .ValueGeneratedNever();
+                value => value.Value,
+                value => new TransactionId(value));
 
         builder.Property(x => x.UserId)
             .IsRequired();
@@ -46,6 +45,10 @@ public sealed class TransactionConfiguration
             .IsUnique();
 
         builder.Property(x => x.RawDescription)
+            .HasMaxLength(1000)
+            .IsRequired();
+
+        builder.Property(x => x.NormalizedDescription)
             .HasMaxLength(1000)
             .IsRequired();
 
@@ -76,6 +79,25 @@ public sealed class TransactionConfiguration
 
         builder.HasIndex(x => x.Fingerprint);
 
+        builder.Property(x => x.ClassificationStatus)
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(x => x.ClassificationSource)
+            .HasConversion<string>()
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(x => x.ClassificationConfidence)
+            .HasPrecision(5, 4);
+
+        builder.Property(x => x.MerchantId);
+
+        builder.Property(x => x.CategoryId);
+
+        builder.Property(x => x.SubcategoryId);
+
         builder.HasIndex(
             x => new
             {
@@ -83,7 +105,8 @@ public sealed class TransactionConfiguration
                 x.TransactionDate
             });
 
-        builder.Property(x => x.ImportedAt)
-            .IsRequired();
+        builder.HasIndex(x => x.CategoryId);
+
+        builder.HasIndex(x => x.MerchantId);
     }
 }

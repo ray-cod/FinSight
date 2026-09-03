@@ -1,15 +1,21 @@
+using FinSight.Application.Abstractions.AI;
 using FinSight.Application.Abstractions.Banking;
 using FinSight.Application.Abstractions.Caching;
 using FinSight.Application.Abstractions.Identity;
+using FinSight.Application.Abstractions.Intelligence;
 using FinSight.Application.Abstractions.Messaging;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Application.Abstractions.Security;
+using FinSight.Application.Features.Transactions;
+using FinSight.Infrastructure.AI.OpenAI;
+using FinSight.Infrastructure.AI.Rules;
 using FinSight.Infrastructure.Audit;
 using FinSight.Infrastructure.Banking.MockBank;
 using FinSight.Infrastructure.Caching.Redis;
 using FinSight.Infrastructure.Configuration;
 using FinSight.Infrastructure.Health;
 using FinSight.Infrastructure.Identity;
+using FinSight.Infrastructure.Intelligence;
 using FinSight.Infrastructure.Messaging.RabbitMq;
 using FinSight.Infrastructure.Persistence;
 using FinSight.Infrastructure.Persistence.Repositories;
@@ -82,6 +88,20 @@ public static class DependencyInjection
         AddRepositories(services);
 
         services.AddScoped<FinancialSeedService>();
+
+        services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
+
+        AddAi(services);
+
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+        services.AddScoped<IMerchantRepository, MerchantRepository>();
+
+        services.AddScoped<TransactionProcessingService>();
+
+        services.AddScoped<MerchantResolutionService>();
+
+        services.AddScoped<CategorySeedService>();
 
         AddHealthChecks(
             services);
@@ -285,6 +305,38 @@ public static class DependencyInjection
         services.AddScoped<
             ITransactionRepository,
             TransactionRepository>();
+    }
+
+    private static void AddAi(
+        IServiceCollection services)
+    {
+        services
+            .AddOptions<OpenAiOptions>()
+            .BindConfiguration(
+                OpenAiOptions.SectionName)
+            .Validate(
+                options =>
+                    !string.IsNullOrWhiteSpace(
+                        options.ApiKey),
+                "OpenAI API key is required.")
+            .Validate(
+                options =>
+                    !string.IsNullOrWhiteSpace(
+                        options.Model),
+                "OpenAI model is required.")
+            .ValidateOnStart();
+
+        services.AddSingleton<
+            ITransactionCategorizer,
+            OpenAiTransactionCategorizer>();
+
+        services.AddSingleton<
+            IMerchantNormalizer,
+            MerchantNormalizer>();
+
+        services.AddSingleton<
+            ICategoryRuleEngine,
+            MerchantCategoryRuleEngine>();
     }
 
     private static void AddHealthChecks(

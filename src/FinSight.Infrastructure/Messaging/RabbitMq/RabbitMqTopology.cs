@@ -20,6 +20,18 @@ public static class RabbitMqTopology
         "finsight.events.dlx";
 
     /// <summary>
+    /// The queue name for dead-lettered messages.
+    /// </summary>
+    public const string DeadLetterQueue =
+        "finsight.events.dead-letter";
+
+    /// <summary>
+    /// The queue name for transaction categorization messages.
+    /// </summary>
+    public const string TransactionCategorizationQueue =
+        "finsight.transaction-categorization";
+
+    /// <summary>
     /// Asynchronously initializes exchange declarations, dead-letter queues, and bindings on the RabbitMQ broker.
     /// </summary>
     /// <param name="connection">The active RabbitMQ connection used to create topology channels.</param>
@@ -48,7 +60,7 @@ public static class RabbitMqTopology
             cancellationToken: cancellationToken);
 
         await channel.QueueDeclareAsync(
-            "finsight.events.dead-letter",
+            DeadLetterQueue,
             durable: true,
             exclusive: false,
             autoDelete: false,
@@ -59,9 +71,27 @@ public static class RabbitMqTopology
             cancellationToken: cancellationToken);
 
         await channel.QueueBindAsync(
-            "finsight.events.dead-letter",
+            DeadLetterQueue,
             DeadLetterExchangeName,
             "#",
+            cancellationToken: cancellationToken);
+
+        await channel.QueueDeclareAsync(
+            TransactionCategorizationQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: new Dictionary<string, object?>
+            {
+                ["x-queue-type"] = "quorum",
+                ["x-dead-letter-exchange"] = DeadLetterExchangeName
+            },
+            cancellationToken: cancellationToken);
+
+        await channel.QueueBindAsync(
+            TransactionCategorizationQueue,
+            ExchangeName,
+            "transaction.imported",
             cancellationToken: cancellationToken);
     }
 }
