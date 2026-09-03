@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "CfB37WRbp8M=",
+  "dgSpecHash": "zWr09a/Hp3I=",
   "success": true,
   "projectFilePath": "/home/raimi/works/FinSight/src/FinSight.Workers/FinSight.Workers.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,9 @@
     "/home/raimi/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.11/microsoft.entityframeworkcore.abstractions.10.0.11.nupkg.sha512",
     "/home/raimi/.nuget/packages/microsoft.entityframeworkcore.analyzers/10.0.11/microsoft.entityframeworkcore.analyzers.10.0.11.nupkg.sha512",
     "/home/raimi/.nuget/packages/microsoft.entityframeworkcore.relational/10.0.11/microsoft.entityframeworkcore.relational.10.0.11.nupkg.sha512",
+    "/home/raimi/.nuget/packages/microsoft.extensions.ai/10.9.0/microsoft.extensions.ai.10.9.0.nupkg.sha512",
+    "/home/raimi/.nuget/packages/microsoft.extensions.ai.abstractions/10.9.0/microsoft.extensions.ai.abstractions.10.9.0.nupkg.sha512",
+    "/home/raimi/.nuget/packages/microsoft.extensions.ai.openai/10.9.0/microsoft.extensions.ai.openai.10.9.0.nupkg.sha512",
     "/home/raimi/.nuget/packages/microsoft.extensions.caching.abstractions/10.0.11/microsoft.extensions.caching.abstractions.10.0.11.nupkg.sha512",
     "/home/raimi/.nuget/packages/microsoft.extensions.caching.memory/10.0.11/microsoft.extensions.caching.memory.10.0.11.nupkg.sha512",
     "/home/raimi/.nuget/packages/microsoft.extensions.configuration/10.0.11/microsoft.extensions.configuration.10.0.11.nupkg.sha512",
@@ -57,6 +60,7 @@
     "/home/raimi/.nuget/packages/microsoft.identitymodel.tokens/8.19.2/microsoft.identitymodel.tokens.8.19.2.nupkg.sha512",
     "/home/raimi/.nuget/packages/npgsql/10.0.3/npgsql.10.0.3.nupkg.sha512",
     "/home/raimi/.nuget/packages/npgsql.entityframeworkcore.postgresql/10.0.3/npgsql.entityframeworkcore.postgresql.10.0.3.nupkg.sha512",
+    "/home/raimi/.nuget/packages/openai/2.12.0/openai.2.12.0.nupkg.sha512",
     "/home/raimi/.nuget/packages/opentelemetry/1.18.0/opentelemetry.1.18.0.nupkg.sha512",
     "/home/raimi/.nuget/packages/opentelemetry.api/1.18.0/opentelemetry.api.1.18.0.nupkg.sha512",
     "/home/raimi/.nuget/packages/opentelemetry.api.providerbuilderextensions/1.18.0/opentelemetry.api.providerbuilderextensions.1.18.0.nupkg.sha512",
@@ -72,9 +76,12 @@
     "/home/raimi/.nuget/packages/serilog.settings.configuration/10.0.0/serilog.settings.configuration.10.0.0.nupkg.sha512",
     "/home/raimi/.nuget/packages/serilog.sinks.console/6.1.1/serilog.sinks.console.6.1.1.nupkg.sha512",
     "/home/raimi/.nuget/packages/stackexchange.redis/3.1.31/stackexchange.redis.3.1.31.nupkg.sha512",
+    "/home/raimi/.nuget/packages/system.clientmodel/1.14.0/system.clientmodel.1.14.0.nupkg.sha512",
     "/home/raimi/.nuget/packages/system.diagnostics.eventlog/10.0.11/system.diagnostics.eventlog.10.0.11.nupkg.sha512",
     "/home/raimi/.nuget/packages/system.identitymodel.tokens.jwt/8.19.2/system.identitymodel.tokens.jwt.8.19.2.nupkg.sha512",
     "/home/raimi/.nuget/packages/system.io.hashing/10.0.5/system.io.hashing.10.0.5.nupkg.sha512",
+    "/home/raimi/.nuget/packages/system.memory.data/10.0.3/system.memory.data.10.0.3.nupkg.sha512",
+    "/home/raimi/.nuget/packages/system.numerics.tensors/10.0.11/system.numerics.tensors.10.0.11.nupkg.sha512",
     "/home/raimi/.nuget/packages/system.threading.ratelimiting/8.0.0/system.threading.ratelimiting.8.0.0.nupkg.sha512"
   ],
   "logs": []

@@ -40,4 +40,16 @@ public interface ITransactionRepository
         Guid accountId,
         int limit = 100,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets a transaction by its identifier within a user scope.
+    /// </summary>
+    /// <param name="userId">The owning user.</param>
+    /// <param name="transactionId">The transaction identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The transaction when found.</returns>
+    Task<Transaction?> GetByIdAsync(
+        Guid userId,
+        Guid transactionId,
+        CancellationToken cancellationToken = default);
 }

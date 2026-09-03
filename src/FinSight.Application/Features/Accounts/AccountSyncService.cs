@@ -187,12 +187,15 @@ public sealed partial class AccountSyncService(
         var account =
             await accountRepository.GetByExternalIdAsync(
                 connection.Id,
-                ResolveAccountId(bankTransaction),
+                bankTransaction.ExternalAccountId,
                 cancellationToken);
 
         if (account is null)
         {
-            LogSkippingAccountNotFound(bankTransaction.ExternalTransactionId);
+            LogSkippingAccountNotFound(
+                bankTransaction.ExternalTransactionId,
+                bankTransaction.ExternalAccountId);
+
             return false;
         }
 
@@ -204,7 +207,9 @@ public sealed partial class AccountSyncService(
 
         if (exists)
         {
-            LogSkippingDuplicateTransaction(bankTransaction.ExternalTransactionId);
+            LogSkippingDuplicateTransaction(
+                bankTransaction.ExternalTransactionId);
+
             return false;
         }
 
@@ -227,9 +232,11 @@ public sealed partial class AccountSyncService(
                 bankTransaction.Status,
                 fingerprint);
 
-        transactionRepository.Add(transaction);
+        transactionRepository.Add(
+            transaction);
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await unitOfWork.SaveChangesAsync(
+            cancellationToken);
 
         await eventPublisher.PublishAsync(
             new TransactionImportedEvent
@@ -238,32 +245,15 @@ public sealed partial class AccountSyncService(
                 UserId = connection.UserId,
                 AccountId = account.Id.Value,
                 TransactionId = transaction.Id.Value,
-                ProviderTransactionId = transaction.ProviderTransactionId,
-                OccurredAt = DateTimeOffset.UtcNow
+                ProviderTransactionId =
+                    transaction.ProviderTransactionId,
+                OccurredAt =
+                    DateTimeOffset.UtcNow
             },
             "transaction.imported",
             cancellationToken);
 
         return true;
-    }
-
-    private static string ResolveAccountId(
-        BankTransactionData transaction)
-    {
-        return transaction.ExternalTransactionId switch
-        {
-            "mock-tx-001" or
-            "mock-tx-002" or
-            "mock-tx-003" or
-            "mock-tx-004" or
-            "mock-tx-005" or
-            "mock-tx-006" or
-            "mock-tx-007" or
-            "mock-tx-008"
-                => "mock-checking-001",
-
-            _ => "mock-checking-001"
-        };
     }
 
     private static string BuildFingerprint(
@@ -295,8 +285,8 @@ public sealed partial class AccountSyncService(
     [LoggerMessage(
         EventId = 3,
         Level = LogLevel.Warning,
-        Message = "Skipping transaction {TransactionId}: account not found.")]
-    private partial void LogSkippingAccountNotFound(string transactionId);
+        Message = "Skipping transaction {TransactionId}: account {AccountId} was not found.")]
+    private partial void LogSkippingAccountNotFound(string transactionId, string accountId);
 
     [LoggerMessage(
         EventId = 4,

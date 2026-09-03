@@ -37,15 +37,6 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var identitySeedService =
-        scope.ServiceProvider
-            .GetRequiredService<IdentitySeedService>();
-
-    await identitySeedService.SeedAsync();
-}
-
-using (var scope = app.Services.CreateScope())
-{
     var identitySeeder =
         scope.ServiceProvider
             .GetRequiredService<IdentitySeedService>();
@@ -54,10 +45,15 @@ using (var scope = app.Services.CreateScope())
 
     var financialSeeder =
         scope.ServiceProvider
-            .GetRequiredService<
-                FinancialSeedService>();
+            .GetRequiredService<FinancialSeedService>();
 
     await financialSeeder.SeedAsync();
+
+    var categorySeeder =
+        scope.ServiceProvider
+            .GetRequiredService<CategorySeedService>();
+
+    await categorySeeder.SeedAsync();
 }
 
 app.UseMiddleware<CorrelationIdMiddleware>();
@@ -105,5 +101,3 @@ app.MapControllers()
     .RequireRateLimiting("api");
 
 await app.RunAsync();
-
-app.Run();

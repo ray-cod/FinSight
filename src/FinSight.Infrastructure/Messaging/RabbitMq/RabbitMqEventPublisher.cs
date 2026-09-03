@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using FinSight.Application.Abstractions.Messaging;
 using RabbitMQ.Client;
@@ -11,8 +12,8 @@ public sealed class RabbitMqEventPublisher(
     IRabbitMqConnectionProvider connectionProvider)
     : IEventPublisher
 {
-    private const string ExchangeName =
-        "finsight.events";
+    private static readonly JsonSerializerOptions JsonOptions =
+        new(JsonSerializerDefaults.Web);
 
     /// <inheritdoc />
     public async Task PublishAsync<T>(
@@ -21,23 +22,23 @@ public sealed class RabbitMqEventPublisher(
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(message);
-
         ArgumentException.ThrowIfNullOrWhiteSpace(
             routingKey);
 
-        cancellationToken.ThrowIfCancellationRequested();
-
         var connection =
-            await connectionProvider.GetConnectionAsync(
-                cancellationToken);
+            await connectionProvider
+                .GetConnectionAsync(
+                    cancellationToken);
 
         await using var channel =
             await connection.CreateChannelAsync(
                 cancellationToken: cancellationToken);
 
         var body =
-            JsonSerializer.SerializeToUtf8Bytes(
-                message);
+            Encoding.UTF8.GetBytes(
+                JsonSerializer.Serialize(
+                    message,
+                    JsonOptions));
 
         var properties =
             new BasicProperties
@@ -45,25 +46,31 @@ public sealed class RabbitMqEventPublisher(
                 ContentType =
                     "application/json",
 
-                ContentEncoding =
-                    "utf-8",
-
                 DeliveryMode =
                     DeliveryModes.Persistent,
 
                 MessageId =
-                    Guid.NewGuid().ToString("N"),
-
-                Type =
-                    typeof(T).FullName
+                    ExtractEventId(message)
             };
 
         await channel.BasicPublishAsync(
-            exchange: ExchangeName,
-            routingKey: routingKey,
-            mandatory: false,
+            RabbitMqTopology.ExchangeName,
+            routingKey,
+            mandatory: true,
             basicProperties: properties,
             body: body,
             cancellationToken: cancellationToken);
+    }
+
+    private static string? ExtractEventId<T>(
+        T message)
+    {
+        var property =
+            typeof(T).GetProperty(
+                "EventId");
+
+        return property?
+            .GetValue(message)?
+            .ToString();
     }
 }

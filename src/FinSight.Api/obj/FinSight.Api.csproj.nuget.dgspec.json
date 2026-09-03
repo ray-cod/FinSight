@@ -126,6 +126,8 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+            "Microsoft.Extensions.AI": "10.9.0",
+            "Microsoft.Extensions.AI.OpenAI": "10.9.0",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
@@ -135,6 +137,7 @@
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+            "OpenAI": "2.12.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -673,6 +676,8 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+            "Microsoft.Extensions.AI": "10.9.0",
+            "Microsoft.Extensions.AI.OpenAI": "10.9.0",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
@@ -682,6 +687,7 @@
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+            "OpenAI": "2.12.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -1048,6 +1054,8 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+            "Microsoft.Extensions.AI": "10.9.0",
+            "Microsoft.Extensions.AI.OpenAI": "10.9.0",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
@@ -1057,6 +1065,7 @@
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+            "OpenAI": "2.12.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -1423,6 +1432,8 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+            "Microsoft.Extensions.AI": "10.9.0",
+            "Microsoft.Extensions.AI.OpenAI": "10.9.0",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
@@ -1432,6 +1443,7 @@
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+            "OpenAI": "2.12.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -1820,6 +1832,16 @@
               "version": "[10.0.11, )",
               "versionCentrallyManaged": true
             },
+            "Microsoft.Extensions.AI": {
+              "target": "Package",
+              "version": "[10.9.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Extensions.AI.OpenAI": {
+              "target": "Package",
+              "version": "[10.9.0, )",
+              "versionCentrallyManaged": true
+            },
             "Microsoft.Extensions.Diagnostics.HealthChecks": {
               "target": "Package",
               "version": "[10.0.11, )",
@@ -1843,6 +1865,11 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[10.0.3, )",
+              "versionCentrallyManaged": true
+            },
+            "OpenAI": {
+              "target": "Package",
+              "version": "[2.12.0, )",
               "versionCentrallyManaged": true
             },
             "RabbitMQ.Client": {
@@ -1877,6 +1904,8 @@
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
             "Microsoft.EntityFrameworkCore": "10.0.11",
             "Microsoft.EntityFrameworkCore.Design": "10.0.11",
+            "Microsoft.Extensions.AI": "10.9.0",
+            "Microsoft.Extensions.AI.OpenAI": "10.9.0",
             "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
@@ -1886,6 +1915,7 @@
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
+            "OpenAI": "2.12.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",

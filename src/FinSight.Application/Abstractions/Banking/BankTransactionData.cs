@@ -6,6 +6,7 @@ namespace FinSight.Application.Abstractions.Banking;
 /// Represents a raw transaction returned by a banking provider.
 /// </summary>
 public sealed record BankTransactionData(
+    string ExternalAccountId,
     string ExternalTransactionId,
     string Description,
     decimal Amount,

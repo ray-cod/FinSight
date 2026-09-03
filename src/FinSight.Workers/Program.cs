@@ -1,5 +1,6 @@
 using FinSight.Application;
 using FinSight.Infrastructure;
+using FinSight.Workers.Consumers;
 using FinSight.Workers.Workers;
 using Serilog;
 
@@ -25,6 +26,9 @@ builder.Services.AddInfrastructure(
 
 builder.Services.AddHostedService<
     BankSyncWorker>();
+
+builder.Services.AddHostedService<
+    TransactionImportedConsumer>();
 
 var host =
     builder.Build();

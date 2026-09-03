@@ -51,4 +51,18 @@ public sealed class TransactionRepository(
             .Take(limit)
             .ToListAsync(cancellationToken);
     }
+
+    /// <inheritdoc />
+    public Task<Transaction?> GetByIdAsync(
+        Guid userId,
+        Guid transactionId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext.Set<Transaction>()
+            .SingleOrDefaultAsync(
+                x =>
+                    x.UserId == userId &&
+                    x.Id.Value == transactionId,
+                cancellationToken);
+    }
 }
