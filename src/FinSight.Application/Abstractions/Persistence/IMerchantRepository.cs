@@ -38,4 +38,14 @@ public interface IMerchantRepository
     /// </summary>
     /// <param name="merchantAlias">The merchant alias to add.</param>
     void AddAlias(MerchantAlias merchantAlias);
+
+    /// <summary>
+    /// Gets a normalized merchant by identifier.
+    /// </summary>
+    /// <param name="merchantId">The merchant identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The merchant when found.</returns>
+    Task<Merchant?> GetByIdAsync(
+        Guid merchantId,
+        CancellationToken cancellationToken = default);
 }

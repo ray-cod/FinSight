@@ -112,6 +112,74 @@ public static class MockBankData
             "USD",
             DateTimeOffset.UtcNow.AddDays(-15),
             "Transfer",
-            "Imported")
+            "Imported"),
+
+        new(
+            "mock-netflix-jan",
+            "mock-checking-001",
+            "NETFLIX.COM",
+            -15.99m,
+            "USD",
+            new DateTimeOffset(
+                2026,
+                1,
+                5,
+                12,
+                0,
+                0,
+                TimeSpan.Zero),
+            "Purchase",
+            "Imported"),
+
+        new(
+            "mock-netflix-feb",
+            "mock-checking-001",
+            "NETFLIX.COM",
+            -15.99m,
+            "USD",
+            new DateTimeOffset(
+                2026,
+                2,
+                5,
+                12,
+                0,
+                0,
+                TimeSpan.Zero),
+            "Purchase",
+            "Imported"),
+
+        new(
+            "mock-netflix-mar",
+            "mock-checking-001",
+            "NETFLIX.COM",
+            -15.99m,
+            "USD",
+            new DateTimeOffset(
+                2026,
+                3,
+                5,
+                12,
+                0,
+                0,
+                TimeSpan.Zero),
+            "Purchase",
+            "Imported"),
+
+        new(
+            "mock-netflix-apr",
+            "mock-checking-001",
+            "NETFLIX.COM",
+            -17.99m,
+            "USD",
+            new DateTimeOffset(
+                2026,
+                4,
+                5,
+                12,
+                0,
+                0,
+                TimeSpan.Zero),
+            "Purchase",
+            "Imported"),
     ];
 }

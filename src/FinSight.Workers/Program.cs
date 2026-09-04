@@ -30,6 +30,12 @@ builder.Services.AddHostedService<
 builder.Services.AddHostedService<
     TransactionImportedConsumer>();
 
+builder.Services.AddHostedService<
+    TransactionCategorizedConsumer>();
+
+builder.Services.AddHostedService<
+    SubscriptionLifecycleWorker>();
+
 var host =
     builder.Build();
 

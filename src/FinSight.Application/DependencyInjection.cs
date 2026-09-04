@@ -1,5 +1,6 @@
 using FinSight.Application.Features.Accounts;
 using FinSight.Application.Features.Institutions;
+using FinSight.Application.Features.Subscriptions;
 using FinSight.Application.Features.Transactions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,8 @@ public static class DependencyInjection
         services.AddScoped<AccountSyncService>();
         services.AddScoped<InstitutionService>();
         services.AddScoped<TransactionService>();
+        services.AddScoped<SubscriptionDetectionService>();
+        services.AddScoped<SubscriptionService>();
 
         return services;
     }
