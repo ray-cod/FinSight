@@ -52,4 +52,20 @@ public interface ITransactionRepository
         Guid userId,
         Guid transactionId,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets recent classified purchase transactions for a merchant and currency.
+    /// </summary>
+    /// <param name="userId">The owning user.</param>
+    /// <param name="merchantId">The normalized merchant identifier.</param>
+    /// <param name="currency">The transaction currency.</param>
+    /// <param name="limit">Maximum number of transactions.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Recent matching transactions.</returns>
+    Task<IReadOnlyList<Transaction>> GetByMerchantAsync(
+        Guid userId,
+        Guid merchantId,
+        string currency,
+        int limit = 36,
+        CancellationToken cancellationToken = default);
 }
