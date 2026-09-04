@@ -38,6 +38,24 @@ public static class RabbitMqTopology
     "finsight.subscription-detection";
 
     /// <summary>
+    /// The queue name for anomaly detection messages.
+    /// </summary>
+    public const string AnomalyDetectionQueue =
+        "finsight.anomaly-detection";
+
+    /// <summary>
+    /// The queue name for insight generation messages.
+    /// </summary>
+    public const string InsightGenerationQueue =
+        "finsight.insight-generation";
+
+    /// <summary>
+    /// The queue name for subscription price anomaly messages.
+    /// </summary>
+    public const string SubscriptionPriceAnomalyQueue =
+        "finsight.subscription-price-anomaly";
+
+    /// <summary>
     /// Asynchronously initializes exchange declarations, dead-letter queues, and bindings on the RabbitMQ broker.
     /// </summary>
     /// <param name="connection">The active RabbitMQ connection used to create topology channels.</param>
@@ -116,6 +134,60 @@ public static class RabbitMqTopology
             SubscriptionDetectionQueue,
             ExchangeName,
             "transaction.categorized",
+            cancellationToken: cancellationToken);
+
+        await channel.QueueDeclareAsync(
+            AnomalyDetectionQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: new Dictionary<string, object?>
+            {
+                ["x-queue-type"] = "quorum",
+                ["x-dead-letter-exchange"] = DeadLetterExchangeName
+            },
+            cancellationToken: cancellationToken);
+
+        await channel.QueueBindAsync(
+            AnomalyDetectionQueue,
+            ExchangeName,
+            "transaction.categorized",
+            cancellationToken: cancellationToken);
+
+        await channel.QueueDeclareAsync(
+            InsightGenerationQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: new Dictionary<string, object?>
+            {
+                ["x-queue-type"] = "quorum",
+                ["x-dead-letter-exchange"] = DeadLetterExchangeName
+            },
+            cancellationToken: cancellationToken);
+
+        await channel.QueueBindAsync(
+            InsightGenerationQueue,
+            ExchangeName,
+            "anomaly.detected",
+            cancellationToken: cancellationToken);
+
+        await channel.QueueDeclareAsync(
+            SubscriptionPriceAnomalyQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: new Dictionary<string, object?>
+            {
+                ["x-queue-type"] = "quorum",
+                ["x-dead-letter-exchange"] = DeadLetterExchangeName
+            },
+            cancellationToken: cancellationToken);
+
+        await channel.QueueBindAsync(
+            SubscriptionPriceAnomalyQueue,
+            ExchangeName,
+            "subscription.price.changed",
             cancellationToken: cancellationToken);
     }
 }

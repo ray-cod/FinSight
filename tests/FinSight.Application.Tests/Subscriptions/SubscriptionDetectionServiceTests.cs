@@ -237,5 +237,70 @@ public sealed class SubscriptionDetectionServiceTests
                 IReadOnlyList<Transaction>>(
                 results);
         }
+
+        public Task<IReadOnlyList<Transaction>> GetForPeriodAsync(
+            Guid userId,
+            DateTimeOffset from,
+            DateTimeOffset toPeriod,
+            CancellationToken cancellationToken = default)
+        {
+            var results =
+                _transactions
+                    .Where(x => x.UserId == userId &&
+                                x.TransactionDate >= from &&
+                                x.TransactionDate < toPeriod)
+                    .OrderByDescending(x => x.TransactionDate)
+                    .ToArray();
+
+            return Task.FromResult<IReadOnlyList<Transaction>>(results);
+        }
+
+        public Task<IReadOnlyList<Transaction>> GetPreviousForMerchantAsync(
+            Guid userId,
+            Guid merchantId,
+            DateTimeOffset before,
+            string currency,
+            int limit = 30,
+            CancellationToken cancellationToken = default)
+        {
+            var results =
+                _transactions
+                    .Where(x => x.UserId == userId &&
+                                x.MerchantId == merchantId &&
+                                x.Currency == currency &&
+                                x.TransactionDate < before)
+                    .OrderByDescending(x => x.TransactionDate)
+                    .Take(limit)
+                    .ToArray();
+
+            return Task.FromResult<IReadOnlyList<Transaction>>(results);
+        }
+
+        public Task<IReadOnlyList<Transaction>> FindPotentialDuplicatesAsync(
+            Guid userId,
+            Guid accountId,
+            Guid transactionId,
+            decimal amount,
+            DateTimeOffset transactionDate,
+            string currency,
+            CancellationToken cancellationToken = default)
+        {
+            // Simple in-memory duplicate search: same user/account/currency,
+            // different id, same amount and within 3 days of the date.
+            var window = TimeSpan.FromDays(3);
+
+            var results =
+                _transactions
+                    .Where(x => x.UserId == userId &&
+                                x.AccountId == accountId &&
+                                x.Id.Value != transactionId &&
+                                x.Currency == currency &&
+                                x.Amount == amount &&
+                                (x.TransactionDate - transactionDate).Duration() <= window)
+                    .OrderByDescending(x => x.TransactionDate)
+                    .ToArray();
+
+            return Task.FromResult<IReadOnlyList<Transaction>>(results);
+        }
     }
 }
