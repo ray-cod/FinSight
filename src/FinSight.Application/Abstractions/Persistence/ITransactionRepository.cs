@@ -68,4 +68,59 @@ public interface ITransactionRepository
         string currency,
         int limit = 36,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets transactions for a user within a time range.
+    /// </summary>
+    /// <param name="userId">The owning user.</param>
+    /// <param name="from">Inclusive start timestamp.</param>
+    /// <param name="toPeriod">Exclusive end timestamp.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Matching transactions.</returns>
+    Task<IReadOnlyList<Transaction>> GetForPeriodAsync(
+        Guid userId,
+        DateTimeOffset from,
+        DateTimeOffset toPeriod,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets previous transactions for the same merchant.
+    /// </summary>
+    /// <param name="userId">The owning user.</param>
+    /// <param name="merchantId">The merchant identifier.</param>
+    /// <param name="before">Only transactions before this timestamp.</param>
+    /// <param name="currency">The currency code.</param>
+    /// <param name="limit">Maximum records.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Previous merchant transactions.</returns>
+    Task<IReadOnlyList<Transaction>> GetPreviousForMerchantAsync(
+        Guid userId,
+        Guid merchantId,
+        DateTimeOffset before,
+        string currency,
+        int limit = 30,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets transactions that are close enough to a candidate
+    /// transaction to evaluate for duplication.
+    /// </summary>
+    /// <param name="userId">The owning user.</param>
+    /// <param name="accountId">The financial account.</param>
+    /// <param name="transactionId">
+    /// The transaction to exclude from results.
+    /// </param>
+    /// <param name="amount">The signed transaction amount.</param>
+    /// <param name="transactionDate">The transaction date.</param>
+    /// <param name="currency">The currency code.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Potential duplicate transactions.</returns>
+    Task<IReadOnlyList<Transaction>> FindPotentialDuplicatesAsync(
+        Guid userId,
+        Guid accountId,
+        Guid transactionId,
+        decimal amount,
+        DateTimeOffset transactionDate,
+        string currency,
+        CancellationToken cancellationToken = default);
 }

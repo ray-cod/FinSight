@@ -92,4 +92,92 @@ public sealed class TransactionRepository(
             .ToListAsync(
                 cancellationToken);
     }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Transaction>>
+        GetForPeriodAsync(
+            Guid userId,
+            DateTimeOffset from,
+            DateTimeOffset toPeriod,
+            CancellationToken cancellationToken = default)
+    {
+        return await dbContext
+            .Set<Transaction>()
+            .AsNoTracking()
+            .Where(
+                x =>
+                    x.UserId == userId &&
+                    x.TransactionDate >= from &&
+                    x.TransactionDate < toPeriod)
+            .OrderBy(x => x.TransactionDate)
+            .ToListAsync(
+                cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Transaction>>
+        GetPreviousForMerchantAsync(
+            Guid userId,
+            Guid merchantId,
+            DateTimeOffset before,
+            string currency,
+            int limit = 30,
+            CancellationToken cancellationToken = default)
+    {
+        limit = Math.Clamp(limit, 1, 100);
+
+        return await dbContext
+            .Set<Transaction>()
+            .AsNoTracking()
+            .Where(
+                x =>
+                    x.UserId == userId &&
+                    x.MerchantId == merchantId &&
+                    x.Currency == currency &&
+                    x.TransactionDate < before &&
+                    x.Type == TransactionType.Purchase &&
+                    x.Amount < 0)
+            .OrderByDescending(
+                x => x.TransactionDate)
+            .Take(limit)
+            .ToListAsync(
+                cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Transaction>>
+        FindPotentialDuplicatesAsync(
+            Guid userId,
+            Guid accountId,
+            Guid transactionId,
+            decimal amount,
+            DateTimeOffset transactionDate,
+            string currency,
+            CancellationToken cancellationToken = default)
+    {
+        var from =
+            transactionDate
+                .AddHours(-24);
+
+        var to =
+            transactionDate
+                .AddHours(24);
+
+        return await dbContext
+            .Set<Transaction>()
+            .AsNoTracking()
+            .Where(
+                x =>
+                    x.UserId == userId &&
+                    x.AccountId == accountId &&
+                    x.Id.Value != transactionId &&
+                    x.Currency == currency &&
+                    x.Amount == amount &&
+                    x.TransactionDate >= from &&
+                    x.TransactionDate <= to)
+            .OrderBy(
+                x => x.TransactionDate)
+            .ToListAsync(
+                cancellationToken);
+    }
 }
