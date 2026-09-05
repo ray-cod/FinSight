@@ -99,6 +99,10 @@ public static class DependencyInjection
 
         services.AddScoped<CategorySeedService>();
 
+        services.AddScoped<IAnomalyDetector, AnomalyDetector>();
+
+        services.AddSingleton<IInsightGenerator, InsightGenerator>();
+
         AddHealthChecks(
             services);
 
@@ -313,6 +317,14 @@ public static class DependencyInjection
         services.AddScoped<
             ICategoryRepository,
             CategoryRepository>();
+
+        services.AddScoped<
+            IAnomalyRepository,
+            AnomalyRepository>();
+
+        services.AddScoped<
+            IInsightRepository,
+            InsightRepository>();
     }
 
     private static void AddAi(

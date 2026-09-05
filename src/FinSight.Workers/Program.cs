@@ -36,6 +36,18 @@ builder.Services.AddHostedService<
 builder.Services.AddHostedService<
     SubscriptionLifecycleWorker>();
 
+builder.Services.AddHostedService<
+    TransactionCategorizedAnomalyConsumer>();
+
+builder.Services.AddHostedService<
+    AnomalyDetectedConsumer>();
+
+builder.Services.AddHostedService<
+    SubscriptionPriceChangedAnomalyConsumer>();
+
+builder.Services.AddHostedService<
+    AnomalyLifecycleWorker>();
+
 var host =
     builder.Build();
 

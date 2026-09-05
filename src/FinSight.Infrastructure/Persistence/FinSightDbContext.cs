@@ -1,5 +1,7 @@
 using FinSight.Domain.Accounts;
+using FinSight.Domain.Anomalies;
 using FinSight.Domain.Common;
+using FinSight.Domain.Insights;
 using FinSight.Domain.Transactions;
 using FinSight.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +25,18 @@ public sealed class FinSightDbContext(
     /// </summary>
     public DbSet<RefreshToken> RefreshTokens =>
         Set<RefreshToken>();
+
+    /// <summary>
+    /// Gets persisted financial anomalies.
+    /// </summary>
+    public DbSet<Anomaly> Anomalies =>
+        Set<Anomaly>();
+
+    /// <summary>
+    /// Gets persisted financial insights.
+    /// </summary>
+    public DbSet<FinancialInsight> FinancialInsights =>
+        Set<FinancialInsight>();
 
     /// <inheritdoc />
     protected override void OnModelCreating(
