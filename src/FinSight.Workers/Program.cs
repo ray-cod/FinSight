@@ -1,7 +1,7 @@
 using FinSight.Application;
+using FinSight.Application.Abstractions.Messaging;
 using FinSight.Infrastructure;
 using FinSight.Infrastructure.Observability;
-using FinSight.Application.Abstractions.Messaging;
 using FinSight.Workers.Consumers;
 using FinSight.Workers.Workers;
 using Serilog;
