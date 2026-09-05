@@ -210,9 +210,6 @@ public sealed class IdentityService(
                 user.Id,
                 cancellationToken);
 
-        await dbContext.SaveChangesAsync(
-            cancellationToken);
-
         await auditService.RecordAsync(
             SecurityEventType.RefreshTokenRevoked,
             user.Id,
@@ -224,6 +221,9 @@ public sealed class IdentityService(
             user.Id,
             ipAddress,
             cancellationToken: cancellationToken);
+
+        await dbContext.SaveChangesAsync(
+            cancellationToken);
 
         return response;
     }
@@ -256,14 +256,14 @@ public sealed class IdentityService(
             existing.RevokedAt =
                 DateTimeOffset.UtcNow;
 
-            await dbContext.SaveChangesAsync(
-                cancellationToken);
-
             await auditService.RecordAsync(
                 SecurityEventType.RefreshTokenRevoked,
                 existing.UserId,
                 null,
                 cancellationToken: cancellationToken);
+
+            await dbContext.SaveChangesAsync(
+                cancellationToken);
         }
     }
 

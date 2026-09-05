@@ -2,6 +2,7 @@ using FinSight.Application.Features.Accounts;
 using FinSight.Application.Features.Anomalies;
 using FinSight.Application.Features.Insights;
 using FinSight.Application.Features.Institutions;
+using FinSight.Application.Features.Notifications;
 using FinSight.Application.Features.Subscriptions;
 using FinSight.Application.Features.Transactions;
 using FluentValidation;
@@ -35,6 +36,9 @@ public static class DependencyInjection
         services.AddScoped<AnomalyService>();
         services.AddScoped<InsightService>();
         services.AddScoped<SubscriptionPriceInsightService>();
+        services.AddScoped<NotificationService>();
+        services.AddScoped<NotificationDeliveryService>();
+        services.AddScoped<InsightNotificationService>();
 
         return services;
     }

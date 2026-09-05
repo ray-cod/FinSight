@@ -1,11 +1,11 @@
 using System.Text;
 using System.Text.Json;
+using FinSight.Application.Abstractions.Observability;
+using FinSight.Application.Abstractions.Outbox;
+using FinSight.Application.Abstractions.Persistence;
 using FinSight.Application.Features.Transactions;
 using FinSight.Contracts.Events;
 using FinSight.Infrastructure.Messaging.RabbitMq;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -92,6 +92,28 @@ public sealed partial class TransactionImportedConsumer(
             using var scope =
                 scopeFactory.CreateScope();
 
+            var processedStore =
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IProcessedMessageStore>();
+
+            var messageId =
+                eventArgs.BasicProperties.MessageId;
+
+            if (!string.IsNullOrWhiteSpace(messageId) &&
+                await processedStore.ExistsAsync(
+                    messageId,
+                    nameof(TransactionImportedConsumer),
+                    cancellationToken))
+            {
+                await channel.BasicAckAsync(
+                    eventArgs.DeliveryTag,
+                    false,
+                    cancellationToken);
+
+                return;
+            }
+
             var processingService =
                 scope.ServiceProvider
                     .GetRequiredService<
@@ -101,6 +123,26 @@ public sealed partial class TransactionImportedConsumer(
                 message.TransactionId,
                 message.UserId,
                 cancellationToken);
+
+            if (!string.IsNullOrWhiteSpace(messageId))
+            {
+                processedStore.Add(
+                    messageId,
+                    nameof(TransactionImportedConsumer));
+            }
+
+            var unitOfWork =
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IUnitOfWork>();
+
+            await unitOfWork.SaveChangesAsync(
+                cancellationToken);
+
+            var telemetry =
+                scope.ServiceProvider.GetRequiredService<IFinSightTelemetry>();
+
+            telemetry.IncrementTransactionsImported(1);
 
             await channel.BasicAckAsync(
                 eventArgs.DeliveryTag,

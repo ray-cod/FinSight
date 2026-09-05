@@ -44,6 +44,8 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
 
     <!-- OpenTelemetry -->
+    <PackageVersion Include="OpenTelemetry" Version="1.18.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.18.0" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.18.0" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.18.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.18.0" />
@@ -71,5 +73,11 @@
 
     <!-- OpenAI official .NET client -->
     <PackageVersion Include="OpenAI" Version="2.12.0" />
+
+    <!-- Resilience -->
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.9.0" />
+
+    <!-- Email -->
+    <PackageVersion Include="MailKit" Version="4.17.0" />
   </ItemGroup>
 </Project>

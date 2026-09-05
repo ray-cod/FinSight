@@ -81,6 +81,7 @@
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "MailKit": "4.17.0",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
@@ -92,12 +93,15 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Http.Resilience": "10.9.0",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenAI": "2.12.0",
+            "OpenTelemetry": "1.18.0",
+            "OpenTelemetry.Exporter.Console": "1.18.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -459,6 +463,7 @@
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "MailKit": "4.17.0",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
@@ -470,12 +475,15 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Http.Resilience": "10.9.0",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenAI": "2.12.0",
+            "OpenTelemetry": "1.18.0",
+            "OpenTelemetry.Exporter.Console": "1.18.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -837,6 +845,7 @@
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "MailKit": "4.17.0",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
@@ -848,12 +857,15 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Http.Resilience": "10.9.0",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenAI": "2.12.0",
+            "OpenTelemetry": "1.18.0",
+            "OpenTelemetry.Exporter.Console": "1.18.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -1220,6 +1232,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.17.0, )",
+              "versionCentrallyManaged": true
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[10.0.11, )",
@@ -1267,6 +1284,11 @@
               "version": "[10.0.11, )",
               "versionCentrallyManaged": true
             },
+            "Microsoft.Extensions.Http.Resilience": {
+              "target": "Package",
+              "version": "[10.9.0, )",
+              "versionCentrallyManaged": true
+            },
             "Microsoft.Extensions.Identity.Core": {
               "target": "Package",
               "version": "[10.0.11, )",
@@ -1280,6 +1302,36 @@
             "OpenAI": {
               "target": "Package",
               "version": "[2.12.0, )",
+              "versionCentrallyManaged": true
+            },
+            "OpenTelemetry": {
+              "target": "Package",
+              "version": "[1.18.0, )",
+              "versionCentrallyManaged": true
+            },
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
+              "target": "Package",
+              "version": "[1.18.0, )",
+              "versionCentrallyManaged": true
+            },
+            "OpenTelemetry.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[1.18.0, )",
+              "versionCentrallyManaged": true
+            },
+            "OpenTelemetry.Instrumentation.AspNetCore": {
+              "target": "Package",
+              "version": "[1.18.0, )",
+              "versionCentrallyManaged": true
+            },
+            "OpenTelemetry.Instrumentation.Http": {
+              "target": "Package",
+              "version": "[1.18.0, )",
+              "versionCentrallyManaged": true
+            },
+            "OpenTelemetry.Instrumentation.Runtime": {
+              "target": "Package",
+              "version": "[1.18.0, )",
               "versionCentrallyManaged": true
             },
             "RabbitMQ.Client": {
@@ -1309,6 +1361,7 @@
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "MailKit": "4.17.0",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
@@ -1320,12 +1373,15 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Http.Resilience": "10.9.0",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenAI": "2.12.0",
+            "OpenTelemetry": "1.18.0",
+            "OpenTelemetry.Exporter.Console": "1.18.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",
@@ -1697,6 +1753,11 @@
               "version": "[10.0.11, )",
               "versionCentrallyManaged": true
             },
+            "OpenTelemetry": {
+              "target": "Package",
+              "version": "[1.18.0, )",
+              "versionCentrallyManaged": true
+            },
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
               "target": "Package",
               "version": "[1.18.0, )",
@@ -1739,6 +1800,7 @@
             "FluentValidation": "12.1.1",
             "FluentValidation.AspNetCore": "11.3.1",
             "FluentValidation.DependencyInjectionExtensions": "12.1.1",
+            "MailKit": "4.17.0",
             "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.11",
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.11",
             "Microsoft.AspNetCore.OpenApi": "10.0.11",
@@ -1750,12 +1812,15 @@
             "Microsoft.Extensions.Diagnostics.HealthChecks": "10.0.11",
             "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions": "10.0.11",
             "Microsoft.Extensions.Hosting": "10.0.11",
+            "Microsoft.Extensions.Http.Resilience": "10.9.0",
             "Microsoft.Extensions.Identity.Core": "10.0.11",
             "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
             "Microsoft.NET.Test.Sdk": "18.9.0",
             "Microsoft.OpenApi": "2.7.5",
             "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
             "OpenAI": "2.12.0",
+            "OpenTelemetry": "1.18.0",
+            "OpenTelemetry.Exporter.Console": "1.18.0",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.18.0",
             "OpenTelemetry.Extensions.Hosting": "1.18.0",
             "OpenTelemetry.Instrumentation.AspNetCore": "1.18.0",

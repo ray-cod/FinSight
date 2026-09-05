@@ -55,8 +55,6 @@ public sealed partial class AccountSyncService(
 
         connection.BeginSync();
 
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-
         await eventPublisher.PublishAsync(
             new AccountSyncStartedEvent
             {
@@ -67,6 +65,8 @@ public sealed partial class AccountSyncService(
             },
             "account.sync.started",
             cancellationToken);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         try
         {
@@ -102,8 +102,6 @@ public sealed partial class AccountSyncService(
 
             connection.CompleteSync(result.NextCursor);
 
-            await unitOfWork.SaveChangesAsync(cancellationToken);
-
             await eventPublisher.PublishAsync(
                 new AccountSyncCompletedEvent
                 {
@@ -116,6 +114,8 @@ public sealed partial class AccountSyncService(
                 "account.sync.completed",
                 cancellationToken);
 
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+
             LogSyncCompleted(connectionId, importedCount);
 
             return importedCount;
@@ -123,8 +123,6 @@ public sealed partial class AccountSyncService(
         catch (Exception exception)
         {
             connection.FailSync(exception.Message);
-
-            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             await eventPublisher.PublishAsync(
                 new AccountSyncFailedEvent
@@ -137,6 +135,8 @@ public sealed partial class AccountSyncService(
                 },
                 "account.sync.failed",
                 cancellationToken);
+
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
             LogSyncFailed(exception, connectionId);
 
@@ -235,9 +235,6 @@ public sealed partial class AccountSyncService(
         transactionRepository.Add(
             transaction);
 
-        await unitOfWork.SaveChangesAsync(
-            cancellationToken);
-
         await eventPublisher.PublishAsync(
             new TransactionImportedEvent
             {
@@ -251,6 +248,9 @@ public sealed partial class AccountSyncService(
                     DateTimeOffset.UtcNow
             },
             "transaction.imported",
+            cancellationToken);
+
+        await unitOfWork.SaveChangesAsync(
             cancellationToken);
 
         return true;

@@ -2,6 +2,7 @@ using FinSight.Application.Abstractions.Intelligence;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Domain.Anomalies;
 using FinSight.Domain.Transactions;
+using FinSight.Infrastructure.Observability;
 
 namespace FinSight.Infrastructure.Intelligence;
 
@@ -36,6 +37,19 @@ public sealed class AnomalyDetector
             Guid transactionId,
             CancellationToken cancellationToken = default)
     {
+        using var activity =
+            FinSightTelemetry.ActivitySource
+                .StartActivity(
+                    "FinSight.AnomalyDetection");
+
+        activity?.SetTag(
+            "user.id",
+            userId.ToString());
+
+        activity?.SetTag(
+            "transaction.id",
+            transactionId.ToString());
+
         var transaction =
             await _transactionRepository
                 .GetByIdAsync(

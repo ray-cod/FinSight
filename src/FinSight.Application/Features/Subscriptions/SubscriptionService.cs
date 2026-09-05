@@ -1,4 +1,5 @@
 using FinSight.Application.Abstractions.Messaging;
+using FinSight.Application.Abstractions.Observability;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Contracts.Events;
 using FinSight.Domain.Subscriptions;
@@ -21,6 +22,7 @@ public sealed partial class SubscriptionService
     private readonly SubscriptionDetectionService _detectionService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IEventPublisher _eventPublisher;
+    private readonly IFinSightTelemetry _telemetry;
     private readonly ILogger<SubscriptionService> _logger;
 
     /// <summary>
@@ -34,6 +36,7 @@ public sealed partial class SubscriptionService
         SubscriptionDetectionService detectionService,
         IUnitOfWork unitOfWork,
         IEventPublisher eventPublisher,
+        IFinSightTelemetry telemetry,
         ILogger<SubscriptionService> logger)
     {
         _subscriptionRepository =
@@ -53,6 +56,9 @@ public sealed partial class SubscriptionService
 
         _eventPublisher =
             eventPublisher;
+
+        _telemetry =
+            telemetry;
 
         _logger =
             logger;
@@ -150,15 +156,10 @@ public sealed partial class SubscriptionService
             await _unitOfWork
                 .SaveChangesAsync(
                     cancellationToken);
-
             await AddPriceObservationIfNeededAsync(
                 subscription,
                 transaction,
                 cancellationToken);
-
-            await _unitOfWork
-                .SaveChangesAsync(
-                    cancellationToken);
 
             await _eventPublisher.PublishAsync(
                 new SubscriptionDetectedEvent
@@ -184,6 +185,12 @@ public sealed partial class SubscriptionService
                 },
                 "subscription.detected",
                 cancellationToken);
+
+            await _unitOfWork
+                .SaveChangesAsync(
+                    cancellationToken);
+
+            _telemetry.IncrementSubscriptionsDetected(1);
 
             return;
         }
@@ -224,10 +231,6 @@ public sealed partial class SubscriptionService
                 transaction,
                 cancellationToken);
 
-        await _unitOfWork
-            .SaveChangesAsync(
-                cancellationToken);
-
         if (priceChanged &&
             observationAdded)
         {
@@ -237,7 +240,6 @@ public sealed partial class SubscriptionService
                     : (detection.CurrentAmount -
                        previousAmount) /
                       previousAmount;
-
             await _eventPublisher.PublishAsync(
                 new SubscriptionPriceChangedEvent
                 {
@@ -264,6 +266,10 @@ public sealed partial class SubscriptionService
                 },
                 "subscription.price.changed",
                 cancellationToken);
+
+            await _unitOfWork
+                .SaveChangesAsync(
+                    cancellationToken);
         }
 
         LogSubscriptionProcessed(

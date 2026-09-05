@@ -1,6 +1,8 @@
 using System.ClientModel;
+using System.Diagnostics;
 using System.Text.Json;
 using FinSight.Application.Abstractions.AI;
+using FinSight.Infrastructure.Observability;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using OpenAI;
@@ -14,6 +16,7 @@ public sealed class OpenAiTransactionCategorizer
     : ITransactionCategorizer
 {
     private readonly IChatClient _chatClient;
+    private readonly string _model;
 
     /// <summary>
     /// Initializes a new instance of the
@@ -36,6 +39,8 @@ public sealed class OpenAiTransactionCategorizer
                 .GetChatClient(
                     configuration.Model)
                 .AsIChatClient();
+
+        _model = configuration.Model;
     }
 
     /// <inheritdoc />
@@ -43,6 +48,23 @@ public sealed class OpenAiTransactionCategorizer
         TransactionClassificationRequest request,
         CancellationToken cancellationToken = default)
     {
+        var sw = Stopwatch.StartNew();
+
+        FinSightTelemetry.AiClassificationRequests.Add(1);
+
+        using var activity =
+            FinSightTelemetry.ActivitySource
+                .StartActivity(
+                    "FinSight.AI.TransactionCategorization");
+
+        activity?.SetTag(
+            "ai.provider",
+            "openai");
+
+        activity?.SetTag(
+            "ai.model",
+            _model);
+
         var categoryJson =
             JsonSerializer.Serialize(
                 request.Categories);
@@ -98,33 +120,49 @@ public sealed class OpenAiTransactionCategorizer
                         StructuredClassification>()
             };
 
-        var response =
-            await _chatClient.GetResponseAsync<
-                StructuredClassification>(
-                messages,
-                options,
-                cancellationToken: cancellationToken);
-
-        var result =
-            response.Result;
-
-        if (result is null)
+        try
         {
-            throw new InvalidOperationException(
-                "AI classification returned no result.");
-        }
+            var response =
+                await _chatClient.GetResponseAsync<
+                    StructuredClassification>(
+                    messages,
+                    options,
+                    cancellationToken: cancellationToken);
 
-        return new TransactionClassificationResult(
-            result.Merchant.Trim(),
-            result.CategoryCode.Trim().ToUpperInvariant(),
-            string.IsNullOrWhiteSpace(
-                result.SubcategoryCode)
-                ? null
-                : result.SubcategoryCode
-                    .Trim()
-                    .ToUpperInvariant(),
-            result.Confidence,
-            result.ClassificationRationale.Trim());
+            var result =
+                response.Result;
+
+            if (result is null)
+            {
+                throw new InvalidOperationException(
+                    "AI classification returned no result.");
+            }
+
+            return new TransactionClassificationResult(
+                result.Merchant.Trim(),
+                result.CategoryCode.Trim().ToUpperInvariant(),
+                string.IsNullOrWhiteSpace(
+                    result.SubcategoryCode)
+                    ? null
+                    : result.SubcategoryCode
+                        .Trim()
+                        .ToUpperInvariant(),
+                result.Confidence,
+                result.ClassificationRationale.Trim());
+        }
+        catch
+        {
+            FinSightTelemetry.AiClassificationFailures.Add(1);
+
+            throw;
+        }
+        finally
+        {
+            sw.Stop();
+
+            FinSightTelemetry.AiClassificationDuration.Record(
+                sw.Elapsed.TotalMilliseconds);
+        }
     }
 
     /// <summary>

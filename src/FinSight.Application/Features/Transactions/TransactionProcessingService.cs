@@ -2,6 +2,7 @@ using FinSight.Application.Abstractions.AI;
 using FinSight.Application.Abstractions.Caching;
 using FinSight.Application.Abstractions.Intelligence;
 using FinSight.Application.Abstractions.Messaging;
+using FinSight.Application.Abstractions.Observability;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Contracts.Events;
 using FinSight.Domain.Transactions;
@@ -24,7 +25,8 @@ public sealed partial class TransactionProcessingService(
     MerchantResolutionService merchantResolutionService,
     IEventPublisher eventPublisher,
     IUnitOfWork unitOfWork,
-    ILogger<TransactionProcessingService> logger)
+    ILogger<TransactionProcessingService> logger,
+    IFinSightTelemetry telemetry)
 {
     private static readonly TimeSpan CacheExpiration =
         TimeSpan.FromDays(30);
@@ -215,9 +217,6 @@ public sealed partial class TransactionProcessingService(
             source,
             confidence);
 
-        await unitOfWork.SaveChangesAsync(
-            cancellationToken);
-
         await eventPublisher.PublishAsync(
             new TransactionCategorizedEvent
             {
@@ -238,6 +237,11 @@ public sealed partial class TransactionProcessingService(
             },
             "transaction.categorized",
             cancellationToken);
+
+        await unitOfWork.SaveChangesAsync(
+                cancellationToken);
+
+        telemetry.IncrementTransactionsCategorized(1);
 
         LogTransactionCategorized(
             transaction.Id.Value,

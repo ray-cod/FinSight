@@ -1,5 +1,6 @@
 using FinSight.Application.Abstractions.Intelligence;
 using FinSight.Application.Abstractions.Messaging;
+using FinSight.Application.Abstractions.Observability;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Contracts.Events;
 using FinSight.Domain.Anomalies;
@@ -18,6 +19,7 @@ public sealed partial class InsightService
     private readonly IInsightGenerator _generator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IEventPublisher _eventPublisher;
+    private readonly IFinSightTelemetry _telemetry;
     private readonly ILogger<InsightService> _logger;
 
     /// <summary>
@@ -30,6 +32,7 @@ public sealed partial class InsightService
         IInsightGenerator generator,
         IUnitOfWork unitOfWork,
         IEventPublisher eventPublisher,
+        IFinSightTelemetry telemetry,
         ILogger<InsightService> logger)
     {
         _repository = repository;
@@ -41,6 +44,8 @@ public sealed partial class InsightService
             unitOfWork;
         _eventPublisher =
             eventPublisher;
+        _telemetry =
+            telemetry;
         _logger =
             logger;
     }
@@ -85,10 +90,6 @@ public sealed partial class InsightService
         _repository.Add(
             insight);
 
-        await _unitOfWork
-            .SaveChangesAsync(
-                cancellationToken);
-
         await _eventPublisher.PublishAsync(
             new InsightGeneratedEvent
             {
@@ -108,6 +109,12 @@ public sealed partial class InsightService
             },
             "insight.generated",
             cancellationToken);
+
+        await _unitOfWork
+            .SaveChangesAsync(
+                cancellationToken);
+
+        _telemetry.IncrementInsightsGenerated(1);
 
         LogInsightGenerated(
             insight.Id,
