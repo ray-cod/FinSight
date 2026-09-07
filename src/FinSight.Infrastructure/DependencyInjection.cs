@@ -4,6 +4,9 @@ using FinSight.Application.Abstractions.Caching;
 using FinSight.Application.Abstractions.Identity;
 using FinSight.Application.Abstractions.Intelligence;
 using FinSight.Application.Abstractions.Messaging;
+using FinSight.Application.Abstractions.Notifications;
+using FinSight.Application.Abstractions.Observability;
+using FinSight.Application.Abstractions.Outbox;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Application.Abstractions.Security;
 using FinSight.Application.Features.Transactions;
@@ -17,6 +20,9 @@ using FinSight.Infrastructure.Health;
 using FinSight.Infrastructure.Identity;
 using FinSight.Infrastructure.Intelligence;
 using FinSight.Infrastructure.Messaging.RabbitMq;
+using FinSight.Infrastructure.Notifications;
+using FinSight.Infrastructure.Observability;
+using FinSight.Infrastructure.Outbox;
 using FinSight.Infrastructure.Persistence;
 using FinSight.Infrastructure.Persistence.Repositories;
 using FinSight.Infrastructure.Persistence.Seed;
@@ -24,6 +30,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
@@ -44,6 +51,9 @@ public static class DependencyInjection
     /// <param name="configuration">
     /// The application configuration.
     /// </param>
+    /// <param name="environment">
+    /// The host environment used to select the appropriate notification sender.
+    /// </param>
     /// <param name="configureAuthentication">
     /// A boolean indicating whether to configure JWT authentication. Defaults to true.
     /// </param>
@@ -56,11 +66,16 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration,
+        IHostEnvironment environment,
         bool configureAuthentication = true,
         bool configureIdentity = true)
     {
+        // SMTP should only be validated in production;
+        // in development we use DevelopmentNotificationSender which doesn't need SMTP configuration
+        bool configureSmtp = !environment.IsDevelopment();
+
         AddOptions(
-            services, configureAuthentication);
+            services, configureAuthentication, configureSmtp);
 
         AddDatabase(
             services);
@@ -87,11 +102,35 @@ public static class DependencyInjection
 
         AddRepositories(services);
 
+        if (environment.IsDevelopment())
+        {
+            services.AddSingleton<INotificationSender, DevelopmentNotificationSender>();
+        }
+        else
+        {
+            services.AddSingleton<INotificationSender, SmtpNotificationSender>();
+        }
+
         services.AddScoped<FinancialSeedService>();
 
-        services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
+        // Register the concrete RabbitMQ publisher so it can be resolved
+        // directly. Avoid registering it as the default `IEventPublisher`
+        // here to prevent accidental overrides when a different
+        // `IEventPublisher` (for example, an outbox-based publisher)
+        // should be used by higher-level components.
+        services.AddSingleton<RabbitMqEventPublisher>();
 
         AddAi(services);
+
+        if (!configureIdentity)
+        {
+            // When identity is not configured (e.g., in background workers),
+            // use a null implementation to satisfy dependency injection.
+            services.AddScoped<IUserContactService, NullUserContactService>();
+        }
+
+        // Telemetry adapter
+        services.AddSingleton<IFinSightTelemetry, FinSightTelemetryAdapter>();
 
         services.AddScoped<TransactionProcessingService>();
 
@@ -103,14 +142,22 @@ public static class DependencyInjection
 
         services.AddSingleton<IInsightGenerator, InsightGenerator>();
 
-        AddHealthChecks(
-            services);
+        // Use the outbox publisher as the default `IEventPublisher` for
+        // request/transactional flows (API). Background workers can
+        // override this registration to publish directly to RabbitMQ.
+        services.AddScoped<IEventPublisher, OutboxEventPublisher>();
+
+        services.AddSingleton<ReliableRabbitMqPublisher>();
+
+        services.AddHostedService<OutboxDispatcher>();
+
+        AddHealthChecks(services);
 
         return services;
     }
 
     private static void AddOptions(
-        IServiceCollection services, bool configureAuthentication)
+        IServiceCollection services, bool configureAuthentication, bool configureSmtp = true)
     {
         services
             .AddOptions<DatabaseOptions>()
@@ -154,6 +201,33 @@ public static class DependencyInjection
                         options.Password),
                 "RabbitMQ password is required.")
             .ValidateOnStart();
+
+        if (configureSmtp)
+        {
+            services
+                .AddOptions<SmtpOptions>()
+                .BindConfiguration(
+                    SmtpOptions.SectionName)
+                .Validate(
+                    options =>
+                        !string.IsNullOrWhiteSpace(
+                            options.Host),
+                    "SMTP host is required.")
+                .Validate(
+                    options =>
+                        !string.IsNullOrWhiteSpace(
+                            options.FromAddress),
+                    "SMTP sender address is required.")
+                .ValidateOnStart();
+        }
+        else
+        {
+            // In development, bind SMTP options but don't validate
+            services
+                .AddOptions<SmtpOptions>()
+                .BindConfiguration(
+                    SmtpOptions.SectionName);
+        }
 
         if (configureAuthentication)
         {
@@ -201,6 +275,14 @@ public static class DependencyInjection
                     databaseOptions.ConnectionString,
                     npgsqlOptions =>
                     {
+                        npgsqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay:
+                                TimeSpan.FromSeconds(10),
+                            errorCodesToAdd: null);
+
+                        npgsqlOptions.CommandTimeout(30);
+
                         npgsqlOptions.MigrationsAssembly(
                             typeof(FinSightDbContext).Assembly
                                 .GetName()
@@ -270,7 +352,11 @@ public static class DependencyInjection
 
         services.AddScoped<IPasswordResetService, PasswordResetService>();
 
-        services.AddScoped<IAuditService, AuditService>();
+        services.AddHttpContextAccessor();
+
+        services.AddScoped<IAuditService, PersistentAuditService>();
+
+        services.AddScoped<IUserContactService, UserContactService>();
 
         services.AddScoped<IdentitySeedService>();
     }
@@ -325,6 +411,22 @@ public static class DependencyInjection
         services.AddScoped<
             IInsightRepository,
             InsightRepository>();
+
+        services.AddScoped<
+            IOutboxRepository,
+            OutboxRepository>();
+
+        services.AddScoped<
+            INotificationRepository,
+            NotificationRepository>();
+
+        services.AddScoped<
+            INotificationPreferenceRepository,
+            NotificationPreferenceRepository>();
+
+        services.AddScoped<
+            IProcessedMessageStore,
+            ProcessedMessageStore>();
     }
 
     private static void AddAi(

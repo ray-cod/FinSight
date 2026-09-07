@@ -1,5 +1,7 @@
 using System.Text;
 using System.Text.Json;
+using FinSight.Application.Abstractions.Outbox;
+using FinSight.Application.Abstractions.Persistence;
 using FinSight.Application.Features.Subscriptions;
 using FinSight.Contracts.Events;
 using FinSight.Infrastructure.Messaging.RabbitMq;
@@ -120,6 +122,28 @@ public sealed partial class TransactionCategorizedConsumer
             using var scope =
                 _scopeFactory.CreateScope();
 
+            var processedStore =
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IProcessedMessageStore>();
+
+            var messageId =
+                eventArgs.BasicProperties.MessageId;
+
+            if (!string.IsNullOrWhiteSpace(messageId) &&
+                await processedStore.ExistsAsync(
+                    messageId,
+                    nameof(TransactionCategorizedConsumer),
+                    cancellationToken))
+            {
+                await channel.BasicAckAsync(
+                    eventArgs.DeliveryTag,
+                    false,
+                    cancellationToken);
+
+                return;
+            }
+
             var service =
                 scope.ServiceProvider
                     .GetRequiredService<
@@ -128,6 +152,21 @@ public sealed partial class TransactionCategorizedConsumer
             await service.ProcessTransactionAsync(
                 message.UserId,
                 message.TransactionId,
+                cancellationToken);
+
+            if (!string.IsNullOrWhiteSpace(messageId))
+            {
+                processedStore.Add(
+                    messageId,
+                    nameof(TransactionCategorizedConsumer));
+            }
+
+            var unitOfWork =
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IUnitOfWork>();
+
+            await unitOfWork.SaveChangesAsync(
                 cancellationToken);
 
             await channel.BasicAckAsync(

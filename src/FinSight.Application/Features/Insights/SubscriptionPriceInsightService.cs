@@ -74,10 +74,6 @@ public sealed class SubscriptionPriceInsightService
         _repository.Add(
             insight);
 
-        await _unitOfWork
-            .SaveChangesAsync(
-                cancellationToken);
-
         await _eventPublisher.PublishAsync(
             new InsightGeneratedEvent
             {
@@ -96,5 +92,9 @@ public sealed class SubscriptionPriceInsightService
             },
             "insight.generated",
             cancellationToken);
+
+        await _unitOfWork
+            .SaveChangesAsync(
+                cancellationToken);
     }
 }

@@ -1,10 +1,11 @@
+using System.Diagnostics;
+using Serilog.Context;
+
 namespace FinSight.Api.Middleware;
 
 /// <summary>
-/// Middleware that inspects incoming HTTP requests for an <c>X-Correlation-ID</c> header, 
-/// generating a new unique identifier if one is not present.
+/// Adds a stable correlation identifier to requests and logs.
 /// </summary>
-/// <param name="next">The delegate representing the next middleware in the HTTP request pipeline.</param>
 public sealed class CorrelationIdMiddleware(
     RequestDelegate next)
 {
@@ -12,18 +13,19 @@ public sealed class CorrelationIdMiddleware(
         "X-Correlation-ID";
 
     /// <summary>
-    /// Invokes the middleware to process the HTTP request context.
+    /// Executes the middleware.
     /// </summary>
-    /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <param name="context">The HTTP context.</param>
     public async Task InvokeAsync(
         HttpContext context)
     {
         var correlationId =
-            context.Request.Headers[HeaderName]
+            context.Request.Headers[
+                HeaderName]
                 .FirstOrDefault();
 
-        if (string.IsNullOrWhiteSpace(correlationId))
+        if (string.IsNullOrWhiteSpace(
+                correlationId))
         {
             correlationId =
                 Guid.NewGuid().ToString("N");
@@ -32,9 +34,22 @@ public sealed class CorrelationIdMiddleware(
         context.Items[HeaderName] =
             correlationId;
 
-        context.Response.Headers[HeaderName] =
+        context.Response.Headers[
+            HeaderName] =
             correlationId;
 
-        await next(context);
+        using (
+            LogContext.PushProperty(
+                "CorrelationId",
+                correlationId))
+        using (
+            LogContext.PushProperty(
+                "TraceId",
+                Activity.Current?
+                    .TraceId
+                    .ToString()))
+        {
+            await next(context);
+        }
     }
 }

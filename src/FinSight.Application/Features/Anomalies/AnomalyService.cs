@@ -140,10 +140,6 @@ public sealed partial class AnomalyService
             anomaly.Resolve();
         }
 
-        await _unitOfWork
-            .SaveChangesAsync(
-                cancellationToken);
-
         await _eventPublisher.PublishAsync(
             new AnomalyResolvedEvent
             {
@@ -157,6 +153,10 @@ public sealed partial class AnomalyService
             },
             "anomaly.resolved",
             cancellationToken);
+
+        await _unitOfWork
+            .SaveChangesAsync(
+                cancellationToken);
 
         LogAnomalyStatusChanged(
             anomalyId,

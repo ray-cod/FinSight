@@ -1,5 +1,6 @@
 using FinSight.Application.Abstractions.Intelligence;
 using FinSight.Application.Abstractions.Messaging;
+using FinSight.Application.Abstractions.Observability;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Contracts.Events;
 using FinSight.Domain.Anomalies;
@@ -17,6 +18,7 @@ public sealed partial class AnomalyDetectionService
     private readonly ITransactionRepository _transactionRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IEventPublisher _eventPublisher;
+    private readonly IFinSightTelemetry _telemetry;
     private readonly ILogger<AnomalyDetectionService> _logger;
 
     /// <summary>
@@ -29,6 +31,7 @@ public sealed partial class AnomalyDetectionService
         ITransactionRepository transactionRepository,
         IUnitOfWork unitOfWork,
         IEventPublisher eventPublisher,
+        IFinSightTelemetry telemetry,
         ILogger<AnomalyDetectionService> logger)
     {
         _detector = detector;
@@ -37,6 +40,7 @@ public sealed partial class AnomalyDetectionService
             transactionRepository;
         _unitOfWork = unitOfWork;
         _eventPublisher = eventPublisher;
+        _telemetry = telemetry;
         _logger = logger;
     }
 
@@ -103,10 +107,6 @@ public sealed partial class AnomalyDetectionService
             _repository.Add(
                 anomaly);
 
-            await _unitOfWork
-                .SaveChangesAsync(
-                    cancellationToken);
-
             await _eventPublisher.PublishAsync(
                 new AnomalyDetectedEvent
                 {
@@ -132,6 +132,10 @@ public sealed partial class AnomalyDetectionService
                 "anomaly.detected",
                 cancellationToken);
 
+            await _unitOfWork
+                .SaveChangesAsync(
+                    cancellationToken);
+
             created.Add(
                 anomaly);
         }
@@ -141,6 +145,8 @@ public sealed partial class AnomalyDetectionService
             LogAnomaliesDetected(
                 created.Count,
                 transactionId);
+
+            _telemetry.IncrementAnomaliesDetected(created.Count);
         }
 
         return created;
