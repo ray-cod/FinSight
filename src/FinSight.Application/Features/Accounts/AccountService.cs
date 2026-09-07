@@ -58,9 +58,6 @@ public sealed partial class AccountService(
 
         connectionRepository.Add(connection);
 
-        await unitOfWork.SaveChangesAsync(
-            cancellationToken);
-
         await eventPublisher.PublishAsync(
             new AccountConnectedEvent
             {
@@ -71,6 +68,9 @@ public sealed partial class AccountService(
                 OccurredAt = DateTimeOffset.UtcNow
             },
             "account.connected",
+            cancellationToken);
+
+        await unitOfWork.SaveChangesAsync(
             cancellationToken);
 
         LogConnectionCreated(

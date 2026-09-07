@@ -14,6 +14,12 @@ public static class RabbitMqTopology
         "finsight.events";
 
     /// <summary>
+    /// The retry topic exchange name for messages that need to be retried.
+    /// </summary>
+    public const string RetryExchangeName =
+    "finsight.events.retry";
+
+    /// <summary>
     /// The dead-letter topic exchange name for unprocessable messages.
     /// </summary>
     public const string DeadLetterExchangeName =
@@ -54,6 +60,12 @@ public static class RabbitMqTopology
     /// </summary>
     public const string SubscriptionPriceAnomalyQueue =
         "finsight.subscription-price-anomaly";
+
+    /// <summary>
+    /// The queue name for notification delivery messages.
+    /// </summary>
+    public const string NotificationQueue =
+    "finsight.notification-delivery";
 
     /// <summary>
     /// Asynchronously initializes exchange declarations, dead-letter queues, and bindings on the RabbitMQ broker.
@@ -189,5 +201,25 @@ public static class RabbitMqTopology
             ExchangeName,
             "subscription.price.changed",
             cancellationToken: cancellationToken);
+
+        await channel.QueueDeclareAsync(
+            NotificationQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            arguments: new Dictionary<string, object?>
+            {
+                ["x-queue-type"] = "quorum",
+                ["x-dead-letter-exchange"] = DeadLetterExchangeName
+            },
+            cancellationToken:
+                cancellationToken);
+
+        await channel.QueueBindAsync(
+            NotificationQueue,
+            ExchangeName,
+            "notification.created",
+            cancellationToken:
+                cancellationToken);
     }
 }

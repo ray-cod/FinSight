@@ -1,5 +1,7 @@
 using System.Text;
 using System.Text.Json;
+using FinSight.Application.Abstractions.Outbox;
+using FinSight.Application.Abstractions.Persistence;
 using FinSight.Application.Features.Insights;
 using FinSight.Contracts.Events;
 using FinSight.Infrastructure.Messaging.RabbitMq;
@@ -113,6 +115,28 @@ public sealed partial class SubscriptionPriceChangedAnomalyConsumer
             using var scope =
                 _scopeFactory.CreateScope();
 
+            var processedStore =
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IProcessedMessageStore>();
+
+            var messageId =
+                args.BasicProperties.MessageId;
+
+            if (!string.IsNullOrWhiteSpace(messageId) &&
+                await processedStore.ExistsAsync(
+                    messageId,
+                    nameof(SubscriptionPriceChangedAnomalyConsumer),
+                    cancellationToken))
+            {
+                await channel.BasicAckAsync(
+                    args.DeliveryTag,
+                    false,
+                    cancellationToken);
+
+                return;
+            }
+
             var service =
                 scope.ServiceProvider
                     .GetRequiredService<
@@ -120,6 +144,21 @@ public sealed partial class SubscriptionPriceChangedAnomalyConsumer
 
             await service.ProcessAsync(
                 message,
+                cancellationToken);
+
+            if (!string.IsNullOrWhiteSpace(messageId))
+            {
+                processedStore.Add(
+                    messageId,
+                    nameof(SubscriptionPriceChangedAnomalyConsumer));
+            }
+
+            var unitOfWork =
+                scope.ServiceProvider
+                    .GetRequiredService<
+                        IUnitOfWork>();
+
+            await unitOfWork.SaveChangesAsync(
                 cancellationToken);
 
             await channel.BasicAckAsync(

@@ -1,6 +1,7 @@
 using System.Threading.RateLimiting;
 using FinSight.Application.Security;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace FinSight.Api.Extensions;
@@ -43,6 +44,13 @@ public static class ServiceCollectionExtensions
         IServiceCollection services)
     {
         services.AddControllers();
+
+        services.Configure<FormOptions>(
+            options =>
+            {
+                options.MultipartBodyLengthLimit =
+                    10 * 1024 * 1024;
+            });
     }
 
     private static void AddExceptionHandling(
