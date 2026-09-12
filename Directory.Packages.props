@@ -69,10 +69,10 @@
     <!-- AI abstraction -->
     <PackageVersion Include="Microsoft.Extensions.AI" Version="10.9.0" />
 
-    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.9.0" />
+    <PackageVersion Include="Microsoft.Extensions.AI.OpenAI" Version="10.10.0" />
 
     <!-- OpenAI official .NET client -->
-    <PackageVersion Include="OpenAI" Version="2.12.0" />
+    <PackageVersion Include="OpenAI" Version="2.13.0" />
 
     <!-- Resilience -->
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.9.0" />
