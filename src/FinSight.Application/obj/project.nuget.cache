@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5LKNZbcJn7Q=",
+  "dgSpecHash": "36D9YX/j8k8=",
   "success": true,
-  "projectFilePath": "/home/raimi/works/FinSight/src/FinSight.Application/FinSight.Application.csproj",
+  "projectFilePath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Application/FinSight.Application.csproj",
   "expectedPackageFiles": [
     "/home/raimi/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",
     "/home/raimi/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.1.1/fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",

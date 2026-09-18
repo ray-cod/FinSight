@@ -7,6 +7,7 @@ namespace FinSight.Application.Features.Accounts;
 /// </summary>
 public sealed record AccountResponse(
     Guid Id,
+    Guid ConnectionId,
     Guid InstitutionId,
     string Name,
     AccountType Type,
@@ -29,3 +30,17 @@ public sealed record InstitutionResponse(
 /// </summary>
 public sealed record ConnectAccountRequest(
     string InstitutionCode);
+
+/// <summary>
+/// Represents a user's connection to a supported financial institution.
+/// </summary>
+public sealed record AccountConnectionResponse(
+    Guid Id,
+    Guid InstitutionId,
+    string ProviderCode,
+    string InstitutionName,
+    ConnectionStatus Status,
+    DateTimeOffset? LastSuccessfulSyncAt,
+    DateTimeOffset? LastSyncAttemptAt,
+    string? LastSyncError,
+    int AccountCount);

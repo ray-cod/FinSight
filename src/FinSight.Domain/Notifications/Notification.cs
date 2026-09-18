@@ -155,12 +155,32 @@ public sealed class Notification
     /// </summary>
     public void MarkRead()
     {
-        if (Status ==
-            NotificationStatus.Delivered)
+        if (Status == NotificationStatus.Pending)
         {
-            Status =
-                NotificationStatus.Read;
+            return;
         }
+
+        Status =
+            NotificationStatus.Read;
+
+        ReadAt =
+            DateTimeOffset.UtcNow;
+    }
+
+
+    /// <summary>
+    /// Dismisses the notification from the active attention queue.
+    /// Pending notifications cannot be dismissed until delivery has completed.
+    /// </summary>
+    public void Dismiss()
+    {
+        if (Status == NotificationStatus.Pending)
+        {
+            return;
+        }
+
+        Status =
+            NotificationStatus.Dismissed;
 
         ReadAt =
             DateTimeOffset.UtcNow;

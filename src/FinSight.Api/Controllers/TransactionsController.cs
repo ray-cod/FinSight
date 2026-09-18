@@ -1,90 +1,94 @@
 using FinSight.Api.Extensions;
 using FinSight.Application.Abstractions.Persistence;
 using FinSight.Application.Features.Transactions;
+using FinSight.Application.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinSight.Api.Controllers;
 
 /// <summary>
-/// Provides financial transaction endpoints.
+/// Provides user-owned financial transaction endpoints.
 /// </summary>
 [ApiController]
 [Route("api/v1/transactions")]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.Authenticated)]
 public sealed class TransactionsController(
-    ITransactionRepository transactionRepository,
-    UpdateTransactionClassificationService
-        classificationService)
+    TransactionQueryService transactionQueryService,
+    UpdateTransactionClassificationService classificationService)
     : ControllerBase
 {
     /// <summary>
-    /// Gets a transaction belonging to the authenticated user.
+    /// Gets a filtered and paginated transaction list for the authenticated user.
     /// </summary>
-    /// <param name="transactionId">The transaction identifier.</param>
+    /// <param name="request">The transaction filters and pagination settings.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The transaction.</returns>
-    [HttpGet("{transactionId:guid}")]
-    public async Task<IActionResult> Get(
-        Guid transactionId,
+    /// <returns>The requested transaction page.</returns>
+    [HttpGet]
+    public async Task<ActionResult<TransactionQueryResult>> GetTransactions(
+        [FromQuery] TransactionListRequest request,
         CancellationToken cancellationToken)
     {
-        var transaction =
-            await transactionRepository.GetByIdAsync(
-                User.GetRequiredUserId(),
-                transactionId,
-                cancellationToken);
-
-        if (transaction is null)
+        if (request.MinAmount.HasValue &&
+            request.MinAmount.Value < 0)
         {
-            return NotFound();
+            return BadRequest("Minimum amount cannot be negative.");
         }
 
-        return Ok(
-            new
-            {
-                id = transaction.Id.Value,
-                accountId = transaction.AccountId,
-                rawDescription =
-                    transaction.RawDescription,
-                normalizedDescription =
-                    transaction.NormalizedDescription,
-                merchantId =
-                    transaction.MerchantId,
-                categoryId =
-                    transaction.CategoryId,
-                subcategoryId =
-                    transaction.SubcategoryId,
-                amount =
-                    transaction.Amount,
-                currency =
-                    transaction.Currency,
-                transactionDate =
-                    transaction.TransactionDate,
-                type =
-                    transaction.Type,
-                status =
-                    transaction.Status,
-                classificationStatus =
-                    transaction.ClassificationStatus,
-                classificationSource =
-                    transaction.ClassificationSource,
-                classificationConfidence =
-                    transaction.ClassificationConfidence,
-                classifiedAt =
-                    transaction.ClassifiedAt
-            });
+        if (request.MaxAmount.HasValue &&
+            request.MaxAmount.Value < 0)
+        {
+            return BadRequest("Maximum amount cannot be negative.");
+        }
+
+        if (request.MinAmount.HasValue &&
+            request.MaxAmount.HasValue &&
+            request.MinAmount.Value > request.MaxAmount.Value)
+        {
+            return BadRequest("Minimum amount cannot exceed maximum amount.");
+        }
+
+        if (request.From.HasValue &&
+            request.To.HasValue &&
+            request.From.Value >= request.To.Value)
+        {
+            return BadRequest("The start date must be earlier than the end date.");
+        }
+
+        var result = await transactionQueryService.GetPageAsync(
+            User.GetRequiredUserId(),
+            request,
+            cancellationToken);
+
+        return Ok(result);
     }
 
     /// <summary>
-    /// Corrects the classification of a transaction.
+    /// Gets detailed transaction information for an owned transaction.
     /// </summary>
-    /// <param name="transactionId">
-    /// The transaction identifier.
-    /// </param>
-    /// <param name="request">
-    /// The corrected classification.
-    /// </param>
+    /// <param name="transactionId">The transaction identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The transaction details.</returns>
+    [HttpGet("{transactionId:guid}")]
+    public async Task<ActionResult<TransactionDetailResponse>> GetTransaction(
+        Guid transactionId,
+        CancellationToken cancellationToken)
+    {
+        var result = await transactionQueryService.GetDetailAsync(
+            User.GetRequiredUserId(),
+            transactionId,
+            cancellationToken);
+
+        return result is null
+            ? NotFound()
+            : Ok(result);
+    }
+
+    /// <summary>
+    /// Corrects the classification of a user-owned transaction.
+    /// </summary>
+    /// <param name="transactionId">The transaction identifier.</param>
+    /// <param name="request">The corrected category selection.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     [HttpPut("{transactionId:guid}/classification")]
     public async Task<IActionResult> CorrectClassification(

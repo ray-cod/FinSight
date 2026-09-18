@@ -123,6 +123,16 @@ New functionality should normally include tests at the lowest relevant level:
 - dead-letter behavior;
 - read lifecycle.
 
+### Profile and security
+
+- display-name ownership;
+- password policy validation;
+- password-change session invalidation;
+- active-session visibility;
+- revoke-other-sessions ownership;
+- security-activity user isolation;
+- safe handling of sessions without an authenticated session identifier.
+
 ### Reliability
 
 - outbox persistence;

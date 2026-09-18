@@ -1,0 +1,32 @@
+/**
+ * Centralized TanStack Query keys for predictable cache invalidation.
+ */
+export const queryKeys = {
+  all: ["finsight"] as const,
+  currentUser: () => [...queryKeys.all, "current-user"] as const,
+  security: () => [...queryKeys.all, "security"] as const,
+  securitySessions: () => [...queryKeys.security(), "sessions"] as const,
+  securityActivity: (limit: number) => [...queryKeys.security(), "activity", limit] as const,
+  dashboard: () => [...queryKeys.all, "dashboard"] as const,
+  accounts: () => [...queryKeys.all, "accounts"] as const,
+  account: (accountId: string) => [...queryKeys.accounts(), accountId] as const,
+  accountConnections: () => [...queryKeys.accounts(), "connections"] as const,
+  accountTransactions: (accountId: string, limit: number) => [...queryKeys.account(accountId), "transactions", limit] as const,
+  transactions: () => [...queryKeys.all, "transactions"] as const,
+  transaction: (transactionId: string) => [...queryKeys.transactions(), transactionId] as const,
+  subscriptions: () => [...queryKeys.all, "subscriptions"] as const,
+  subscription: (subscriptionId: string) => [...queryKeys.subscriptions(), subscriptionId] as const,
+  subscriptionPriceHistory: (subscriptionId: string, limit: number) => [...queryKeys.subscription(subscriptionId), "price-history", limit] as const,
+  anomalies: () => [...queryKeys.all, "anomalies"] as const,
+  anomaliesList: (includeResolved: boolean, limit: number) => [...queryKeys.anomalies(), "list", includeResolved, limit] as const,
+  anomaly: (anomalyId: string) => [...queryKeys.anomalies(), anomalyId] as const,
+  insights: () => [...queryKeys.all, "insights"] as const,
+  insightsList: (includeDismissed: boolean, limit: number) => [...queryKeys.insights(), "list", includeDismissed, limit] as const,
+  insight: (insightId: string) => [...queryKeys.insights(), insightId] as const,
+  notifications: () => [...queryKeys.all, "notifications"] as const,
+  notificationsList: (includeRead: boolean, limit: number) => [...queryKeys.notifications(), "list", includeRead, limit] as const,
+  notificationUnreadCount: () => [...queryKeys.notifications(), "unread-count"] as const,
+  notificationPreferences: () => [...queryKeys.notifications(), "preferences"] as const,
+  institutions: () => [...queryKeys.all, "institutions"] as const,
+  categories: () => [...queryKeys.all, "categories"] as const,
+};

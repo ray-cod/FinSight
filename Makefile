@@ -12,7 +12,8 @@
 	migrate \
 	migration \
 	logs \
-	clean
+	clean \
+	demo
 
 up:
 	docker compose up -d
@@ -61,3 +62,6 @@ logs:
 
 clean:
 	dotnet clean FinSight.slnx
+
+demo:
+	./scripts/demo/setup.sh

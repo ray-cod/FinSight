@@ -40,6 +40,24 @@ public sealed class AccountsController(
     }
 
     /// <summary>
+    /// Gets active financial institution connections owned by the authenticated user.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The user's active institution connections.</returns>
+    [HttpGet("connections")]
+    public async Task<ActionResult<
+        IReadOnlyList<AccountConnectionResponse>>> GetConnections(
+        CancellationToken cancellationToken)
+    {
+        var response =
+            await accountService.GetConnectionsAsync(
+                User.GetRequiredUserId(),
+                cancellationToken);
+
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Gets a financial account owned by the authenticated user.
     /// </summary>
     /// <param name="accountId">The account identifier.</param>

@@ -48,6 +48,29 @@ public interface INotificationRepository
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Counts unread in-app notifications for a user.
+    /// </summary>
+    /// <param name="userId">The owning user.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The unread in-app notification count.</returns>
+    Task<int> CountUnreadInAppAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Marks all delivered, failed, or dead-lettered in-app notifications as read.
+    /// Pending notifications are intentionally left pending so delivery is not suppressed.
+    /// </summary>
+    /// <param name="userId">The owning user.</param>
+    /// <param name="readAt">The read timestamp.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The number of notifications changed.</returns>
+    Task<int> MarkAllReadAsync(
+        Guid userId,
+        DateTimeOffset readAt,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Adds a notification.
     /// </summary>
     /// <param name="notification">The notification.</param>

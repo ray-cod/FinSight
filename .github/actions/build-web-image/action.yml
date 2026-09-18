@@ -1,0 +1,107 @@
+name: Build and publish FinSight Web image
+description: Build the Next.js standalone image, publish immutable and environment tags, and emit release metadata.
+inputs:
+  environment:
+    description: Deployment environment name.
+    required: true
+  api-base-url:
+    description: Browser-reachable FinSight API origin baked into the Next.js client bundle.
+    required: true
+  client-error-endpoint:
+    description: Optional browser error telemetry endpoint.
+    required: false
+    default: ""
+  github-token:
+    description: GitHub token used to authenticate against GHCR.
+    required: true
+  image-suffix:
+    description: Lowercase image name suffix.
+    required: false
+    default: finsight-web
+  git-sha:
+    description: Commit SHA being released.
+    required: true
+outputs:
+  image:
+    description: Immutable image reference tagged with the Git SHA.
+    value: ${{ steps.publish.outputs.image }}
+  environment-image:
+    description: Environment tag for the published image.
+    value: ${{ steps.publish.outputs.environment_image }}
+  manifest:
+    description: Path to the generated release manifest.
+    value: ${{ steps.publish.outputs.manifest }}
+runs:
+  using: composite
+  steps:
+    - name: Log in to GitHub Container Registry
+      shell: bash
+      env:
+        CR_PAT: ${{ inputs.github-token }}
+      run: |
+        set -euo pipefail
+        echo "$CR_PAT" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+
+    - name: Build and publish image
+      id: publish
+      shell: bash
+      env:
+        RELEASE_ENVIRONMENT: ${{ inputs.environment }}
+        API_BASE_URL: ${{ inputs.api-base-url }}
+        CLIENT_ERROR_ENDPOINT: ${{ inputs.client-error-endpoint }}
+        IMAGE_SUFFIX: ${{ inputs.image-suffix }}
+        RELEASE_SHA: ${{ inputs.git-sha }}
+      run: |
+        set -euo pipefail
+
+        IMAGE_REPOSITORY="ghcr.io/$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')/${IMAGE_SUFFIX}"
+        IMMUTABLE_IMAGE="${IMAGE_REPOSITORY}:${RELEASE_SHA}"
+        ENVIRONMENT_IMAGE="${IMAGE_REPOSITORY}:${RELEASE_ENVIRONMENT}"
+
+        test -n "${API_BASE_URL}" || { echo "WEB_API_BASE_URL is required." >&2; exit 1; }
+
+        docker buildx create --name "finsight-web-${GITHUB_RUN_ID}" --use --driver docker-container >/dev/null 2>&1 || true
+        docker buildx inspect --bootstrap
+
+        docker buildx build \
+          --file frontend/finsight-web/Dockerfile \
+          --platform linux/amd64 \
+          --build-arg "NEXT_PUBLIC_API_BASE_URL=${API_BASE_URL}" \
+          --build-arg "NEXT_PUBLIC_CLIENT_ERROR_ENDPOINT=${CLIENT_ERROR_ENDPOINT}" \
+          --build-arg "BUILD_VERSION=${RELEASE_SHA}" \
+          --label "org.opencontainers.image.title=FinSight Web" \
+          --label "org.opencontainers.image.version=${RELEASE_SHA}" \
+          --label "org.opencontainers.image.revision=${RELEASE_SHA}" \
+          --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+          --tag "${IMMUTABLE_IMAGE}" \
+          --tag "${ENVIRONMENT_IMAGE}" \
+          --cache-from "type=gha,scope=finsight-web-${RELEASE_ENVIRONMENT}" \
+          --cache-to "type=gha,mode=max,scope=finsight-web-${RELEASE_ENVIRONMENT}" \
+          --provenance=true \
+          --sbom=true \
+          --push \
+          frontend/finsight-web
+
+        mkdir -p artifacts
+        MANIFEST="artifacts/frontend-release.json"
+        cat > "${MANIFEST}" <<EOF
+        {
+          "service": "finsight-web",
+          "environment": "${RELEASE_ENVIRONMENT}",
+          "image": "${IMMUTABLE_IMAGE}",
+          "environmentImage": "${ENVIRONMENT_IMAGE}",
+          "gitSha": "${RELEASE_SHA}",
+          "repository": "${GITHUB_REPOSITORY}"
+        }
+        EOF
+
+        echo "image=${IMMUTABLE_IMAGE}" >> "${GITHUB_OUTPUT}"
+        echo "environment_image=${ENVIRONMENT_IMAGE}" >> "${GITHUB_OUTPUT}"
+        echo "manifest=${MANIFEST}" >> "${GITHUB_OUTPUT}"
+
+    - name: Upload frontend release manifest
+      uses: actions/upload-artifact@v7
+      with:
+        name: finsight-web-${{ inputs.environment }}-${{ inputs.git-sha }}
+        path: artifacts/frontend-release.json
+        if-no-files-found: error

@@ -58,7 +58,7 @@ pnpm install
 pnpm dev
 ```
 
-The current frontend is a scaffold and is not wired to the API yet.
+The frontend is being implemented incrementally against the versioned API through typed feature services. The current snapshot includes the shared foundation, authentication/session experience, dashboard, accounts/banking workspace, transaction exploration workspace, subscription intelligence, anomaly review, and financial insights.
 
 ## Make targets
 

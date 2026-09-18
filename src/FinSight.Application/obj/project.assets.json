@@ -250,11 +250,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/raimi/works/FinSight/src/FinSight.Application/FinSight.Application.csproj",
+      "projectUniqueName": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Application/FinSight.Application.csproj",
       "projectName": "FinSight.Application",
-      "projectPath": "/home/raimi/works/FinSight/src/FinSight.Application/FinSight.Application.csproj",
+      "projectPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Application/FinSight.Application.csproj",
       "packagesPath": "/home/raimi/.nuget/packages/",
-      "outputPath": "/home/raimi/works/FinSight/src/FinSight.Application/obj/",
+      "outputPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Application/obj/",
       "projectStyle": "PackageReference",
       "centralPackageVersionsManagementEnabled": true,
       "CentralPackageTransitivePinningEnabled": true,
@@ -272,11 +272,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj": {
-              "projectPath": "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj"
+            "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Contracts/FinSight.Contracts.csproj": {
+              "projectPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Contracts/FinSight.Contracts.csproj"
             },
-            "/home/raimi/works/FinSight/src/FinSight.Domain/FinSight.Domain.csproj": {
-              "projectPath": "/home/raimi/works/FinSight/src/FinSight.Domain/FinSight.Domain.csproj"
+            "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Domain/FinSight.Domain.csproj": {
+              "projectPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Domain/FinSight.Domain.csproj"
             }
           }
         }

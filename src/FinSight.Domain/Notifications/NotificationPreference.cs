@@ -71,6 +71,16 @@ public sealed class NotificationPreference
     }
 
     /// <summary>
+    /// Enables or disables in-app notifications.
+    /// </summary>
+    /// <param name="enabled">Whether in-app notifications are enabled.</param>
+    public void SetInAppEnabled(
+        bool enabled)
+    {
+        InAppEnabled = enabled;
+    }
+
+    /// <summary>
     /// Enables or disables email notifications.
     /// </summary>
     /// <param name="enabled">Whether email is enabled.</param>

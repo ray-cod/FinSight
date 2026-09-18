@@ -3,6 +3,7 @@ using FinSight.Application.Abstractions.Identity;
 using FinSight.Application.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FinSight.Api.Controllers;
 
@@ -37,6 +38,7 @@ public sealed class UsersController(
     /// Updates the authenticated user's display name.
     /// </summary>
     [HttpPatch("me")]
+    [EnableRateLimiting("api")]
     public async Task<ActionResult<CurrentUserResponse>> UpdateCurrentUser(
         UpdateCurrentUserRequest request,
         CancellationToken cancellationToken)

@@ -1,3 +1,4 @@
+using System.Globalization;
 using FinSight.Application.Abstractions.Identity;
 using FinSight.Application.Abstractions.Security;
 using FinSight.Domain.Security;
@@ -206,9 +207,7 @@ public sealed class IdentityService(
                 cancellationToken);
 
         existing.ReplacedByTokenId =
-            await GetLatestTokenIdAsync(
-                user.Id,
-                cancellationToken);
+            response.SessionId;
 
         await auditService.RecordAsync(
             SecurityEventType.RefreshTokenRevoked,
@@ -328,35 +327,37 @@ public sealed class IdentityService(
         var roles =
             await userManager.GetRolesAsync(user);
 
-        var accessToken =
-            await tokenService.CreateAccessTokenAsync(
-                user.Id,
-                user.Email!,
-                roles,
-                cancellationToken);
-
         var plaintextRefreshToken =
             RefreshTokenGenerator.Generate();
+
+        var sessionId = Guid.NewGuid();
+        var createdAt = DateTimeOffset.UtcNow;
 
         var refreshToken =
             new RefreshToken
             {
-                Id = Guid.NewGuid(),
+                Id = sessionId,
                 UserId = user.Id,
                 TokenHash =
                     RefreshTokenGenerator.Hash(
                         plaintextRefreshToken),
                 ExpiresAt =
-                    DateTimeOffset.UtcNow
-                    .Add(
+                    createdAt.Add(
                         _jwtOptions.RefreshTokenLifetime),
-                CreatedAt =
-                    DateTimeOffset.UtcNow,
+                CreatedAt = createdAt,
                 CreatedByIp = ipAddress
             };
 
         dbContext.RefreshTokens.Add(
             refreshToken);
+
+        var accessToken =
+            await tokenService.CreateAccessTokenAsync(
+                user.Id,
+                user.Email!,
+                roles,
+                sessionId,
+                cancellationToken);
 
         await dbContext.SaveChangesAsync(
             cancellationToken);
@@ -365,20 +366,81 @@ public sealed class IdentityService(
             accessToken.Token,
             plaintextRefreshToken,
             accessToken.ExpiresAt,
-            user.Id);
+            user.Id,
+            sessionId);
     }
 
-    private async Task<Guid?> GetLatestTokenIdAsync(
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<SessionResponse>> GetSessionsAsync(
         Guid userId,
-        CancellationToken cancellationToken)
+        Guid currentSessionId,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var now = DateTimeOffset.UtcNow;
+
         return await dbContext.RefreshTokens
-            .Where(token =>
-                token.UserId == userId)
+            .AsNoTracking()
+            .Where(
+                token =>
+                    token.UserId == userId &&
+                    token.RevokedAt == null &&
+                    token.ExpiresAt > now)
             .OrderByDescending(
                 token => token.CreatedAt)
-            .Select(token => (Guid?)token.Id)
-            .FirstOrDefaultAsync(
+            .Select(
+                token =>
+                    new SessionResponse(
+                        token.Id,
+                        token.CreatedAt,
+                        token.ExpiresAt,
+                        token.CreatedByIp,
+                        token.Id == currentSessionId))
+            .ToListAsync(
                 cancellationToken);
     }
+
+    /// <inheritdoc />
+    public async Task<int> RevokeOtherSessionsAsync(
+        Guid userId,
+        Guid currentSessionId,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var now = DateTimeOffset.UtcNow;
+
+        var revokedCount =
+            await dbContext.RefreshTokens
+                .Where(
+                    token =>
+                        token.UserId == userId &&
+                        token.Id != currentSessionId &&
+                        token.RevokedAt == null &&
+                        token.ExpiresAt > now)
+                .ExecuteUpdateAsync(
+                    setters =>
+                        setters.SetProperty(
+                            token => token.RevokedAt,
+                            now),
+                    cancellationToken);
+
+        if (revokedCount > 0)
+        {
+            await auditService.RecordAsync(
+                SecurityEventType.OtherSessionsRevoked,
+                userId,
+                null,
+                new Dictionary<string, string>
+                {
+                    ["revoked_count"] = revokedCount.ToString(CultureInfo.InvariantCulture)
+                },
+                cancellationToken);
+        }
+
+        return revokedCount;
+    }
+
 }

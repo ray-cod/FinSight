@@ -123,9 +123,9 @@ public sealed class AnomaliesController(
             accountId =
                 anomaly.AccountId,
             type =
-                anomaly.Type,
+                anomaly.Type.ToString(),
             severity =
-                anomaly.Severity,
+                anomaly.Severity.ToString(),
             score =
                 anomaly.Score,
             confidence =
@@ -139,7 +139,7 @@ public sealed class AnomaliesController(
             detectedAt =
                 anomaly.DetectedAt,
             status =
-                anomaly.Status,
+                anomaly.Status.ToString(),
             resolvedAt =
                 anomaly.ResolvedAt
         };

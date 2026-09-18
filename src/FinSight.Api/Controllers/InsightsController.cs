@@ -129,9 +129,9 @@ public sealed class InsightsController(
             transactionId =
                 insight.TransactionId,
             type =
-                insight.Type,
+                insight.Type.ToString(),
             severity =
-                insight.Severity,
+                insight.Severity.ToString(),
             title =
                 insight.Title,
             message =
@@ -141,7 +141,7 @@ public sealed class InsightsController(
             expiresAt =
                 insight.ExpiresAt,
             status =
-                insight.Status,
+                insight.Status.ToString(),
             createdAt =
                 insight.CreatedAt
         };

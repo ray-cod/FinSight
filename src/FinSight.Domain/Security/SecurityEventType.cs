@@ -53,5 +53,10 @@ public enum SecurityEventType
     /// <summary>
     /// A user's profile was updated.
     /// </summary>
-    ProfileUpdated = 10
+    ProfileUpdated = 10,
+
+    /// <summary>
+    /// Active sessions other than the current session were revoked.
+    /// </summary>
+    OtherSessionsRevoked = 11
 }

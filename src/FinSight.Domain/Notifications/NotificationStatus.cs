@@ -28,5 +28,10 @@ public enum NotificationStatus
     /// <summary>
     /// User has read the notification.
     /// </summary>
-    Read = 5
+    Read = 5,
+
+    /// <summary>
+    /// User dismissed the notification from their active attention queue.
+    /// </summary>
+    Dismissed = 6
 }

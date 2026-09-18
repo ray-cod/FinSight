@@ -75,4 +75,56 @@ public sealed class NotificationTests
             .Be(
                 NotificationStatus.Read);
     }
+    /// <summary>
+    /// Verifies that a terminal delivery failure can be acknowledged as read.
+    /// </summary>
+    [Fact]
+    public void MarkReadShouldResolveTerminalDeliveryFailure()
+    {
+        var notification =
+            Notification.Create(
+                Guid.NewGuid(),
+                NotificationType.AnomalyDetected,
+                NotificationChannel.InApp,
+                "Unusual transaction",
+                "A transaction needs review.",
+                null);
+
+        notification.MarkFailed(
+            "The in-app delivery worker failed.");
+        notification.MarkRead();
+
+        notification.Status
+            .Should()
+            .Be(
+                NotificationStatus.Read);
+    }
+
+    /// <summary>
+    /// Verifies that pending delivery cannot be acknowledged as read.
+    /// </summary>
+    [Fact]
+    public void MarkReadShouldIgnorePendingDelivery()
+    {
+        var notification =
+            Notification.Create(
+                Guid.NewGuid(),
+                NotificationType.FinancialInsight,
+                NotificationChannel.InApp,
+                "Insight",
+                "A financial insight is available.",
+                null);
+
+        notification.MarkRead();
+
+        notification.Status
+            .Should()
+            .Be(
+                NotificationStatus.Pending);
+
+        notification.ReadAt
+            .Should()
+            .BeNull();
+    }
+
 }

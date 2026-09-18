@@ -60,4 +60,30 @@ public interface IAuthService
         Guid userId,
         ChangePasswordRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the currently active refresh-token sessions for the authenticated user.
+    /// </summary>
+    /// <param name="userId">The authenticated user identifier.</param>
+    /// <param name="currentSessionId">The current session identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The active sessions.</returns>
+    Task<IReadOnlyList<SessionResponse>> GetSessionsAsync(
+        Guid userId,
+        Guid currentSessionId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Revokes all active sessions except the current session.
+    /// </summary>
+    /// <param name="userId">The authenticated user identifier.</param>
+    /// <param name="currentSessionId">The current session identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The number of sessions revoked.</returns>
+    Task<int> RevokeOtherSessionsAsync(
+        Guid userId,
+        Guid currentSessionId,
+        CancellationToken cancellationToken = default);
 }
+
+

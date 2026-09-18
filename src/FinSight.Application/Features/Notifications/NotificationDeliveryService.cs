@@ -75,10 +75,9 @@ public sealed partial class NotificationDeliveryService
                 "Notification was not found.");
         }
 
-        if (notification.Status ==
-            NotificationStatus.Read ||
-            notification.Status ==
-            NotificationStatus.Delivered)
+        if (notification.Status == NotificationStatus.Read ||
+            notification.Status == NotificationStatus.Dismissed ||
+            notification.Status == NotificationStatus.Delivered)
         {
             return;
         }

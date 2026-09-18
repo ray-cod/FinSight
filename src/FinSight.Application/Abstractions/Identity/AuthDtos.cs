@@ -22,7 +22,8 @@ public sealed record AuthResponse(
     string AccessToken,
     string RefreshToken,
     DateTimeOffset AccessTokenExpiresAt,
-    Guid UserId);
+    Guid UserId,
+    Guid SessionId);
 
 /// <summary>
 /// Represents a refresh-token request.
@@ -72,4 +73,21 @@ public sealed record CurrentUserResponse(
     Guid UserId,
     string Email,
     string DisplayName,
-    bool EmailConfirmed);
+    bool EmailConfirmed,
+    DateTimeOffset CreatedAt);
+
+/// <summary>
+/// Represents an active refresh-token session.
+/// </summary>
+public sealed record SessionResponse(
+    Guid SessionId,
+    DateTimeOffset CreatedAt,
+    DateTimeOffset ExpiresAt,
+    string? IpAddress,
+    bool IsCurrent);
+
+/// <summary>
+/// Represents the outcome of revoking other active sessions.
+/// </summary>
+public sealed record RevokeSessionsResponse(
+    int RevokedCount);

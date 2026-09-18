@@ -1,12 +1,16 @@
 name: CD - Production
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
 
 permissions:
   contents: read
+  packages: write
+  actions: read
 
 concurrency:
   group: deployment-production
@@ -14,16 +18,19 @@ concurrency:
 
 jobs:
   build:
-    name: Build production artifact
+    name: Build production backend artifact
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'production' }}
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+      - name: Checkout verified CI commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
           cache: true
@@ -49,7 +56,71 @@ jobs:
           --output ./artifacts/workers
 
       - name: Upload production artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
-          name: finsight-production-${{ github.sha }}
+          name: finsight-production-${{ github.event.workflow_run.head_sha }}
           path: artifacts/
+
+  frontend-release:
+    name: Build and publish frontend image
+    runs-on: ubuntu-latest
+    environment: production
+    needs: build
+    outputs:
+      image: ${{ steps.web.outputs.image }}
+
+    steps:
+      - name: Checkout verified CI commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Build and publish frontend image
+        id: web
+        uses: ./.github/actions/build-web-image
+        with:
+          environment: production
+          api-base-url: ${{ vars.WEB_API_BASE_URL }}
+          client-error-endpoint: ${{ vars.WEB_CLIENT_ERROR_ENDPOINT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          git-sha: ${{ github.event.workflow_run.head_sha }}
+
+  deploy-web:
+    name: Deploy frontend
+    runs-on: ubuntu-latest
+    environment: production
+    needs: frontend-release
+    if: ${{ vars.WEB_DEPLOYMENT_ENABLED == 'true' }}
+
+    steps:
+      - name: Checkout verified CI commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Deploy frontend image
+        env:
+          WEB_DEPLOY_WEBHOOK_URL: ${{ secrets.WEB_DEPLOY_WEBHOOK_URL }}
+          WEB_DEPLOY_WEBHOOK_TOKEN: ${{ secrets.WEB_DEPLOY_WEBHOOK_TOKEN }}
+          WEB_IMAGE: ${{ needs.frontend-release.outputs.image }}
+          WEB_ENVIRONMENT: production
+          WEB_GIT_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: ./scripts/deploy-web.sh
+
+  smoke-web:
+    name: Frontend deployment smoke test
+    runs-on: ubuntu-latest
+    environment: production
+    needs: deploy-web
+    if: ${{ needs.deploy-web.result == 'success' && vars.WEB_BASE_URL != '' }}
+
+    steps:
+      - name: Checkout verified CI commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Run frontend health smoke test
+        env:
+          WEB_BASE_URL: ${{ vars.WEB_BASE_URL }}
+        run: ./scripts/smoke-web.sh

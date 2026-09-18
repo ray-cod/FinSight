@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SF1DXXm0e3c=",
+  "dgSpecHash": "mvRJRT4sZA8=",
   "success": true,
-  "projectFilePath": "/home/raimi/works/FinSight/src/FinSight.Workers/FinSight.Workers.csproj",
+  "projectFilePath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Workers/FinSight.Workers.csproj",
   "expectedPackageFiles": [
     "/home/raimi/.nuget/packages/bouncycastle.cryptography/2.6.2/bouncycastle.cryptography.2.6.2.nupkg.sha512",
     "/home/raimi/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",

@@ -65,7 +65,7 @@ User-facing APIs
 
 ## 2. Current Repository Status
 
-This documentation describes the repository snapshot on the `dev` branch at commit `49ddc7b`.
+This documentation describes the current development repository snapshot, including the completed backend phases and frontend Phases 1–12. Git history in the repository preserves the earlier phase commits; the frontend work in this snapshot is intentionally carried as the current working tree.
 
 The backend currently contains the following implemented areas:
 
@@ -93,11 +93,35 @@ The backend currently contains the following implemented areas:
 | OpenTelemetry / Prometheus / Jaeger / Grafana integration | Implemented |
 | API health endpoints | Implemented |
 | Backend tests | Present |
-| Next.js frontend | Initial scaffold; not yet connected to the backend |
+| Next.js frontend foundation | Implemented |
+| Transaction exploration frontend | Implemented |
+| Next.js authentication/session experience | Implemented |
+| Next.js financial dashboard | Implemented |
+| Next.js accounts & banking experience | Implemented |
+| Next.js subscription intelligence experience | Implemented |
+| Next.js anomaly & financial insights experience | Implemented |
+| Next.js notifications & user preferences experience | Implemented |
+| Next.js profile, security & session-management experience | Implemented |
+| Next.js cross-application UX & production polish | Implemented |
+| Next.js frontend CI/CD & release integration | Implemented |
+| Portfolio demonstration readiness | Implemented |
 
 The current source tree shows a much more complete system than the original placeholder README represented.
 
 ---
+
+## Portfolio demonstration
+
+The repository contains a deterministic portfolio scenario and a reproducible demo helper under [`scripts/demo`](scripts/demo). Use [`docs/demo/README.md`](docs/demo/README.md) for the five-minute walkthrough and [`docs/portfolio/README.md`](docs/portfolio/README.md) for the technical portfolio narrative.
+
+The source-controlled product previews under [`docs/portfolio/assets`](docs/portfolio/assets) make the repository visually demonstrable without binary screenshot churn.
+
+![FinSight dashboard preview](docs/portfolio/assets/dashboard-preview.svg)
+
+![FinSight transactions preview](docs/portfolio/assets/transactions-preview.svg)
+
+![FinSight intelligence preview](docs/portfolio/assets/intelligence-preview.svg)
+
 
 ## 3. Architecture Overview
 
@@ -276,6 +300,17 @@ The anomaly model includes a score, confidence, evidence, lifecycle status, and 
 
 Insights are the user-readable interpretation layer above raw anomalies and other financial events.
 
+### Authentication / account security
+
+| Method | Endpoint | Auth |
+|---|---|---|
+| GET | `/api/v1/users/me` | Authenticated |
+| PATCH | `/api/v1/users/me` | Authenticated |
+| POST | `/api/v1/auth/change-password` | Authenticated |
+| GET | `/api/v1/auth/sessions` | Authenticated |
+| POST | `/api/v1/auth/sessions/revoke-others` | Authenticated |
+| GET | `/api/v1/security/activity` | Authenticated |
+
 ### Notifications
 
 - `Notification`
@@ -414,7 +449,9 @@ The domain currently supports anomaly categories represented by the `AnomalyType
 - merchant spending spikes;
 - category spending spikes;
 - new merchants;
-- possible duplicate transactions.
+- possible duplicate transactions;
+- merchant frequency spikes;
+- subscription price changes.
 
 Detected anomalies are persisted with severity, score, confidence, title, description, evidence, status, and detection time.
 
@@ -679,7 +716,10 @@ All business endpoints use the versioned prefix:
 | Method | Endpoint | Auth |
 |---|---|---|
 | GET | `/api/v1/notifications` | Authenticated |
+| GET | `/api/v1/notifications/unread-count` | Authenticated |
+| POST | `/api/v1/notifications/read-all` | Authenticated |
 | POST | `/api/v1/notifications/{notificationId}/read` | Authenticated |
+| POST | `/api/v1/notifications/{notificationId}/dismiss` | Authenticated |
 | GET | `/api/v1/notifications/preferences` | Authenticated |
 | PUT | `/api/v1/notifications/preferences` | Authenticated |
 
@@ -745,7 +785,8 @@ The development API also exposes OpenAPI metadata through the development-only O
 
 ```json
 {
-  "emailEnabled": true,
+  "inAppEnabled": true,
+  "emailEnabled": false,
   "anomalyNotificationsEnabled": true,
   "subscriptionNotificationsEnabled": true,
   "insightNotificationsEnabled": true
@@ -963,6 +1004,21 @@ This endpoint executes health checks tagged as `ready`, covering the dependencie
 
 ## 24. Local Development
 
+### Frontend development
+
+The Next.js client lives under `frontend/finsight-web`. The frontend uses the development API origin already configured by `src/FinSight.Api/appsettings.Development.json`:
+
+```bash
+cd frontend/finsight-web
+pnpm install
+pnpm dev
+```
+
+Open `http://localhost:3000`. The authentication flow is connected to the existing `/api/v1/auth/*` and `/api/v1/users/me` backend endpoints. The web client now also includes the completed account, transaction and subscription intelligence workspaces.
+
+The browser session restores its access/refresh-token pair from `sessionStorage`, retries an authenticated request once after a 401 when refresh succeeds, and clears the local session when refresh fails.
+
+
 ### Prerequisites
 
 Install:
@@ -1144,7 +1200,7 @@ It is a Next.js application using:
 - Recharts;
 - Playwright/Vitest/testing-library dependencies.
 
-At the current repository snapshot, the frontend is still the initial application shell and **is not yet integrated with the FinSight API**. The backend therefore remains the primary implemented product surface at this stage.
+At the current repository snapshot, frontend Phases 1–12 are implemented against the existing FinSight API, covering the application foundation, authentication/session experience, financial dashboard, accounts, transactions, subscriptions, anomalies, insights, notification center, notification preferences, profile management, password management, active-session management, user-scoped security activity, cross-application production UX/accessibility, frontend CI/CD/release integration, and portfolio demonstration readiness.
 
 To run it locally:
 
@@ -1251,7 +1307,7 @@ The implementation has been built incrementally through explicit phases:
 | 7 | Anomaly detection & financial insights | anomaly engine, insight generator, related events/APIs |
 | 8 | Notifications, observability & production hardening | notifications, outbox, audit retention, telemetry, consumers |
 
-The current `dev` branch additionally contains the small follow-up import-order fix represented by commit `49ddc7b`.
+The current development snapshot also contains the completed FinSight web foundation, authentication/session experience, financial dashboard, accounts/banking experience, transaction exploration, subscription intelligence, anomaly/insight workflows, notifications/preferences, profile/security management, and cross-application production UX layer described in the frontend project documentation.
 
 ---
 
@@ -1343,7 +1399,7 @@ Production environments must at minimum follow these repository conventions:
 These are important to distinguish from implemented backend capabilities:
 
 - Banking integration is still mock-provider based.
-- The web frontend is still a scaffold and is not connected to the backend.
+- The web frontend is incrementally integrated with the backend through typed `/api/v1` contracts and dedicated feature services.
 - The AI categorization provider is OpenAI-specific at the current infrastructure implementation level, although the Application layer depends on an abstraction.
 - The current anomaly detector is deterministic/statistical rather than a learned anomaly model.
 - Notification delivery currently provides in-app/email-oriented infrastructure rather than a broad multi-channel communications platform.
@@ -1376,10 +1432,23 @@ Dashboard
       +---- Profile/security
 ```
 
-After frontend integration, the project can evolve toward more sophisticated anomaly models, real banking adapters, richer notification channels, stronger end-to-end tests, dashboards, and production deployment infrastructure.
+The current frontend integration now covers authentication, the core dashboard, financial accounts, transactions, subscription intelligence, anomaly/insight workflows, notification management, notification preferences, profile management, password security, active-session management, security activity, and shared production UX/accessibility behavior. Remaining product-surface work is concentrated in deeper end-to-end coverage, frontend CI/CD, deployment integration, and portfolio presentation.
 
 ---
 
 ## 36. License
 
 The repository includes a `LICENSE` file. See that file for the authoritative license terms.
+
+## 11. Frontend CI/CD & Release Integration
+
+The frontend is now a first-class citizen of the repository release pipeline. CI installs the locked pnpm dependency graph, runs lint/typecheck/unit tests, produces the production Next.js build, and executes the Playwright suite against that production server.
+
+After the repository CI workflow succeeds, staging and production CD workflows build the verified `frontend/finsight-web` commit as a standalone, non-root OCI image, publish immutable Git SHA tags to GHCR, attach SBOM/provenance metadata, and emit a release manifest. Environments can enable a provider-neutral deployment webhook followed by a `/api/health` smoke test.
+
+A manual `Deploy Web` workflow supports redeploying or rolling back to an existing immutable frontend image tag.
+
+
+## Phase 12 — Portfolio Demonstration Readiness
+
+Implemented a deterministic mock-bank portfolio scenario with recurring subscriptions, a subscription price increase, a materially large purchase, category spending growth, a potential duplicate, and realistic supporting activity. Added a reproducible `scripts/demo/setup.sh` workflow, a `make demo` entry point, portfolio/demo documentation, source-controlled product previews, and a recommended five-minute demonstration journey. The demo setup is idempotent and exercises the same authenticated APIs and background intelligence pipeline as normal application use.

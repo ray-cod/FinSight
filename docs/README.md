@@ -12,7 +12,7 @@ This directory contains the detailed technical documentation for the current Fin
 | [`development.md`](development.md) | Local setup, commands, package/migration conventions and feature-development workflow |
 | [`testing.md`](testing.md) | Test projects, testing pyramid and important scenarios |
 | [`operations.md`](operations.md) | Local service map, health, observability, outbox, failures and operational guidance |
-| [`ci-cd/`](ci-cd/) | Branching, CI/CD, deployment, rollback and secrets management |
+| [`ci-cd/`](ci-cd/) | Branching, CI/CD, deployment, rollback, frontend release integration and secrets management |
 
 ## Source of truth
 
@@ -21,3 +21,10 @@ The documentation is derived from the implementation represented by the reposito
 For API behavior, the controllers and application services are authoritative.
 For domain behavior, the Domain entities are authoritative.
 For infrastructure/runtime behavior, Infrastructure, Worker, configuration and Docker Compose code are authoritative.
+
+
+### Portfolio demonstration
+
+- [`demo/README.md`](demo/README.md) — reproducible local demo setup and walkthrough
+- [`portfolio/README.md`](portfolio/README.md) — portfolio pitch and technical discussion guide
+- [`portfolio/SCREENSHOTS.md`](portfolio/SCREENSHOTS.md) — capture checklist

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj": {}
+    "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Contracts/FinSight.Contracts.csproj": {}
   },
   "projects": {
-    "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj": {
+    "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Contracts/FinSight.Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj",
+        "projectUniqueName": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Contracts/FinSight.Contracts.csproj",
         "projectName": "FinSight.Contracts",
-        "projectPath": "/home/raimi/works/FinSight/src/FinSight.Contracts/FinSight.Contracts.csproj",
+        "projectPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Contracts/FinSight.Contracts.csproj",
         "packagesPath": "/home/raimi/.nuget/packages/",
-        "outputPath": "/home/raimi/works/FinSight/src/FinSight.Contracts/obj/",
+        "outputPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Contracts/obj/",
         "projectStyle": "PackageReference",
         "centralPackageVersionsManagementEnabled": true,
         "CentralPackageTransitivePinningEnabled": true,

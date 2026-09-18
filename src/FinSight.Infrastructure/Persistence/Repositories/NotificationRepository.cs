@@ -30,15 +30,16 @@ public sealed class NotificationRepository(
                 .AsNoTracking()
                 .Where(
                     x =>
-                        x.UserId == userId);
+                        x.UserId == userId &&
+                        x.Channel == NotificationChannel.InApp);
 
         if (!includeRead)
         {
             query =
                 query.Where(
                     x =>
-                        x.Status !=
-                        NotificationStatus.Read);
+                        x.Status != NotificationStatus.Read &&
+                        x.Status != NotificationStatus.Dismissed);
         }
 
         return await query
@@ -78,6 +79,49 @@ public sealed class NotificationRepository(
                     x.UserId == userId &&
                     x.DeduplicationKey ==
                     deduplicationKey,
+                cancellationToken);
+    }
+
+
+    /// <inheritdoc />
+    public Task<int> CountUnreadInAppAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext
+            .Set<Notification>()
+            .CountAsync(
+                x =>
+                    x.UserId == userId &&
+                    x.Channel == NotificationChannel.InApp &&
+                    x.Status != NotificationStatus.Read,
+                cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<int> MarkAllReadAsync(
+        Guid userId,
+        DateTimeOffset readAt,
+        CancellationToken cancellationToken = default)
+    {
+        return dbContext
+            .Set<Notification>()
+            .Where(
+                x =>
+                    x.UserId == userId &&
+                    x.Channel == NotificationChannel.InApp &&
+                    (x.Status == NotificationStatus.Delivered ||
+                     x.Status == NotificationStatus.Failed ||
+                     x.Status == NotificationStatus.DeadLettered))
+            .ExecuteUpdateAsync(
+                setters =>
+                    setters
+                        .SetProperty(
+                            x => x.Status,
+                            NotificationStatus.Read)
+                        .SetProperty(
+                            x => x.ReadAt,
+                            readAt),
                 cancellationToken);
     }
 

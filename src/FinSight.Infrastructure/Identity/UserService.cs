@@ -95,6 +95,7 @@ public sealed class UserService(
             user.Id,
             user.Email!,
             user.DisplayName,
-            user.EmailConfirmed);
+            user.EmailConfirmed,
+            user.CreatedAt);
     }
 }

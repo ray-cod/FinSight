@@ -72,7 +72,8 @@ public sealed class NotificationService
                 userId,
                 cancellationToken);
 
-        if (!preferences.InAppEnabled ||
+        if ((!preferences.InAppEnabled &&
+             type != NotificationType.Security) ||
             !IsTypeEnabled(
                 preferences,
                 type))
@@ -224,6 +225,41 @@ public sealed class NotificationService
                 cancellationToken);
     }
 
+
+    /// <summary>
+    /// Counts unread in-app notifications for a user.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The unread notification count.</returns>
+    public Task<int> CountUnreadInAppAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        return _notificationRepository
+            .CountUnreadInAppAsync(
+                userId,
+                cancellationToken);
+    }
+
+    /// <summary>
+    /// Marks all delivered, failed, and dead-lettered in-app notifications as read.
+    /// Pending notifications remain pending so background delivery can continue.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The number of notifications changed.</returns>
+    public async Task<int> MarkAllReadAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _notificationRepository
+            .MarkAllReadAsync(
+                userId,
+                DateTimeOffset.UtcNow,
+                cancellationToken);
+    }
+
     /// <summary>
     /// Marks a user's notification as read.
     /// </summary>
@@ -242,13 +278,45 @@ public sealed class NotificationService
                     notificationId,
                     cancellationToken);
 
-        if (notification is null)
+        if (notification is null ||
+            notification.Channel != NotificationChannel.InApp)
         {
             throw new KeyNotFoundException(
                 "Notification was not found.");
         }
 
         notification.MarkRead();
+
+        await _unitOfWork.SaveChangesAsync(
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// Dismisses a user's in-app notification without deleting its history.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <param name="notificationId">The notification identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    public async Task DismissAsync(
+        Guid userId,
+        Guid notificationId,
+        CancellationToken cancellationToken = default)
+    {
+        var notification =
+            await _notificationRepository
+                .GetByIdAsync(
+                    userId,
+                    notificationId,
+                    cancellationToken);
+
+        if (notification is null ||
+            notification.Channel != NotificationChannel.InApp)
+        {
+            throw new KeyNotFoundException(
+                "Notification was not found.");
+        }
+
+        notification.Dismiss();
 
         await _unitOfWork.SaveChangesAsync(
             cancellationToken);

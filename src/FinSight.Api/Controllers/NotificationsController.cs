@@ -11,7 +11,9 @@ namespace FinSight.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/v1/notifications")]
-[Authorize]
+[Authorize(
+    Policy =
+        AuthorizationPolicies.Authenticated)]
 public sealed class NotificationsController(
     NotificationService notificationService)
     : ControllerBase
@@ -51,20 +53,64 @@ public sealed class NotificationsController(
                         id =
                             notification.Id,
                         type =
-                            notification.Type,
+                            notification.Type.ToString(),
                         channel =
-                            notification.Channel,
+                            notification.Channel.ToString(),
                         title =
                             notification.Title,
                         message =
                             notification.Message,
                         status =
-                            notification.Status,
+                            notification.Status.ToString(),
                         createdAt =
                             notification.CreatedAt,
                         readAt =
                             notification.ReadAt
                     }));
+    }
+
+    /// <summary>
+    /// Gets the unread in-app notification count for the current user.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The unread notification count.</returns>
+    [HttpGet("unread-count")]
+    public async Task<IActionResult> GetUnreadCount(
+        CancellationToken cancellationToken)
+    {
+        var count =
+            await notificationService
+                .CountUnreadInAppAsync(
+                    User.GetRequiredUserId(),
+                    cancellationToken);
+
+        return Ok(
+            new
+            {
+                count
+            });
+    }
+
+    /// <summary>
+    /// Marks all eligible in-app notifications as read.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The number of notifications marked as read.</returns>
+    [HttpPost("read-all")]
+    public async Task<IActionResult> MarkAllRead(
+        CancellationToken cancellationToken)
+    {
+        var count =
+            await notificationService
+                .MarkAllReadAsync(
+                    User.GetRequiredUserId(),
+                    cancellationToken);
+
+        return Ok(
+            new
+            {
+                count
+            });
     }
 
     /// <summary>
@@ -83,6 +129,25 @@ public sealed class NotificationsController(
     {
         await notificationService
             .MarkReadAsync(
+                User.GetRequiredUserId(),
+                notificationId,
+                cancellationToken);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Dismisses an in-app notification while retaining its history.
+    /// </summary>
+    /// <param name="notificationId">The notification identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    [HttpPost("{notificationId:guid}/dismiss")]
+    public async Task<IActionResult> Dismiss(
+        Guid notificationId,
+        CancellationToken cancellationToken)
+    {
+        await notificationService
+            .DismissAsync(
                 User.GetRequiredUserId(),
                 notificationId,
                 cancellationToken);
@@ -142,6 +207,9 @@ public sealed class NotificationsController(
                     User.GetRequiredUserId(),
                     cancellationToken);
 
+        preferences.SetInAppEnabled(
+            request.InAppEnabled);
+
         preferences.SetEmailEnabled(
             request.EmailEnabled);
 
@@ -167,6 +235,7 @@ public sealed class NotificationsController(
 /// Represents a notification preference update.
 /// </summary>
 public sealed record UpdateNotificationPreferencesRequest(
+    bool InAppEnabled,
     bool EmailEnabled,
     bool AnomalyNotificationsEnabled,
     bool SubscriptionNotificationsEnabled,

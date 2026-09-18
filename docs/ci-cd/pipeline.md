@@ -38,3 +38,22 @@ Dependency vulnerability checks run on pushes, pull requests, and on a weekly sc
 `main` represents production.
 
 Deployment workflows are separated so that staging and production credentials remain isolated.
+
+## Frontend CI
+
+The CI workflow also validates `frontend/finsight-web` on every push and pull request:
+
+1. Install with the committed pnpm lockfile.
+2. Lint.
+3. Typecheck.
+4. Run unit tests.
+5. Produce a production Next.js build.
+6. Run Playwright against that production build.
+
+## Frontend release
+
+After a successful CI workflow run on `staging` or `main`, the corresponding CD workflow publishes the frontend as an OCI image from the exact verified CI SHA to GHCR using an immutable Git SHA tag plus an environment tag. The image includes provenance/SBOM attestations and is built from the Next.js standalone output.
+
+Deployment is triggered through an environment-specific webhook when `WEB_DEPLOYMENT_ENABLED=true`. A health smoke test calls `/api/health` after deployment.
+
+A manual workflow supports deploying or rolling back to an existing immutable frontend image tag.

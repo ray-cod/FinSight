@@ -348,6 +348,8 @@ public static class DependencyInjection
 
         services.AddScoped<IUserService, UserService>();
 
+        services.AddScoped<ISecurityService, SecurityService>();
+
         services.AddScoped<ITokenService, JwtTokenService>();
 
         services.AddScoped<IPasswordResetService, PasswordResetService>();
@@ -391,6 +393,10 @@ public static class DependencyInjection
         services.AddScoped<
             ITransactionRepository,
             TransactionRepository>();
+
+        services.AddScoped<
+            ITransactionQueryRepository,
+            TransactionQueryRepository>();
 
         services.AddScoped<
             ISubscriptionRepository,

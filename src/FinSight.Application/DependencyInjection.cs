@@ -1,4 +1,5 @@
 using FinSight.Application.Features.Accounts;
+using FinSight.Application.Features.Dashboard;
 using FinSight.Application.Features.Anomalies;
 using FinSight.Application.Features.Insights;
 using FinSight.Application.Features.Institutions;
@@ -27,9 +28,11 @@ public static class DependencyInjection
             typeof(DependencyInjection).Assembly);
 
         services.AddScoped<AccountService>();
+        services.AddScoped<DashboardService>();
         services.AddScoped<AccountSyncService>();
         services.AddScoped<InstitutionService>();
         services.AddScoped<TransactionService>();
+        services.AddScoped<TransactionQueryService>();
         services.AddScoped<SubscriptionDetectionService>();
         services.AddScoped<SubscriptionService>();
         services.AddScoped<AnomalyDetectionService>();

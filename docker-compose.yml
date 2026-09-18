@@ -76,7 +76,7 @@ services:
       retries: 10
     networks:
       - finsight
-  
+
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.136.0
     container_name: finsight-otel-collector

@@ -158,7 +158,7 @@ public sealed class SubscriptionsController
             currency =
                 subscription.Currency,
             frequency =
-                subscription.Frequency,
+                subscription.Frequency.ToString(),
             currentAmount =
                 subscription.CurrentAmount,
             averageAmount =
@@ -174,7 +174,7 @@ public sealed class SubscriptionsController
             lastPriceChangedAt =
                 subscription.LastPriceChangedAt,
             status =
-                subscription.Status
+                subscription.Status.ToString()
         };
     }
 }

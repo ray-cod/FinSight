@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/raimi/works/FinSight/src/FinSight.Domain/FinSight.Domain.csproj",
+      "projectUniqueName": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Domain/FinSight.Domain.csproj",
       "projectName": "FinSight.Domain",
-      "projectPath": "/home/raimi/works/FinSight/src/FinSight.Domain/FinSight.Domain.csproj",
+      "projectPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Domain/FinSight.Domain.csproj",
       "packagesPath": "/home/raimi/.nuget/packages/",
-      "outputPath": "/home/raimi/works/FinSight/src/FinSight.Domain/obj/",
+      "outputPath": "/home/raimi/Downloads/FinSight-Phase12-Frontend-Updated/src/FinSight.Domain/obj/",
       "projectStyle": "PackageReference",
       "centralPackageVersionsManagementEnabled": true,
       "CentralPackageTransitivePinningEnabled": true,

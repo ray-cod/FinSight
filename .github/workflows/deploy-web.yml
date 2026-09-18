@@ -1,0 +1,64 @@
+name: Deploy Web
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Deployment environment.
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      image-tag:
+        description: Immutable GHCR tag to deploy (normally a commit SHA).
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deployment-web-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy selected frontend image
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    if: ${{ vars.WEB_DEPLOYMENT_ENABLED == 'true' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Resolve immutable image reference
+        shell: bash
+        run: |
+          IMAGE_REPOSITORY="ghcr.io/$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')/finsight-web"
+          echo "WEB_IMAGE=${IMAGE_REPOSITORY}:${{ inputs.image-tag }}" >> "${GITHUB_ENV}"
+
+      - name: Deploy frontend image
+        env:
+          WEB_DEPLOY_WEBHOOK_URL: ${{ secrets.WEB_DEPLOY_WEBHOOK_URL }}
+          WEB_DEPLOY_WEBHOOK_TOKEN: ${{ secrets.WEB_DEPLOY_WEBHOOK_TOKEN }}
+          WEB_ENVIRONMENT: ${{ inputs.environment }}
+          WEB_GIT_SHA: ${{ inputs.image-tag }}
+        run: ./scripts/deploy-web.sh
+
+  smoke:
+    name: Smoke test selected deployment
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    needs: deploy
+    if: ${{ needs.deploy.result == 'success' && vars.WEB_BASE_URL != '' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Run frontend health smoke test
+        env:
+          WEB_BASE_URL: ${{ vars.WEB_BASE_URL }}
+        run: ./scripts/smoke-web.sh

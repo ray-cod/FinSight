@@ -100,6 +100,7 @@ public sealed partial class AccountService(
                 account =>
                     new AccountResponse(
                         account.Id.Value,
+                        account.ConnectionId,
                         account.InstitutionId,
                         account.Name,
                         account.Type,
@@ -107,6 +108,69 @@ public sealed partial class AccountService(
                         account.CurrentBalance,
                         account.AvailableBalance,
                         account.Status))
+            .ToArray();
+    }
+
+
+    /// <summary>
+    /// Gets the active financial institution connections belonging to a user.
+    /// </summary>
+    /// <param name="userId">The authenticated user identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The user's active institution connections.</returns>
+    public async Task<IReadOnlyList<AccountConnectionResponse>> GetConnectionsAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var connections =
+            await connectionRepository.GetActiveAsync(
+                userId,
+                cancellationToken);
+
+        if (connections.Count == 0)
+        {
+            return [];
+        }
+
+        var institutions =
+            await institutionRepository.GetActiveAsync(
+                cancellationToken);
+
+        var accounts =
+            await accountRepository.GetByUserIdAsync(
+                userId,
+                cancellationToken);
+
+        var institutionsById = institutions
+            .ToDictionary(institution => institution.Id);
+
+        var accountCounts = accounts
+            .GroupBy(account => account.ConnectionId)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Count());
+
+        return connections
+            .Select(
+                connection =>
+                {
+                    institutionsById.TryGetValue(
+                        connection.InstitutionId,
+                        out var institution);
+
+                    return new AccountConnectionResponse(
+                        connection.Id,
+                        connection.InstitutionId,
+                        institution?.ProviderCode ?? "UNKNOWN",
+                        institution?.Name ?? "Unknown institution",
+                        connection.Status,
+                        connection.LastSuccessfulSyncAt,
+                        connection.LastSyncAttemptAt,
+                        connection.LastSyncError,
+                        accountCounts.GetValueOrDefault(
+                            connection.Id));
+                })
+            .OrderBy(x => x.InstitutionName)
             .ToArray();
     }
 
@@ -136,6 +200,7 @@ public sealed partial class AccountService(
 
         return new AccountResponse(
             account.Id.Value,
+            account.ConnectionId,
             account.InstitutionId,
             account.Name,
             account.Type,

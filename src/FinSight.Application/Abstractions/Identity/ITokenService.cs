@@ -11,12 +11,14 @@ public interface ITokenService
     /// <param name="userId">The user identifier.</param>
     /// <param name="email">The user's email.</param>
     /// <param name="roles">The user's roles.</param>
+    /// <param name="sessionId">The refresh-token session identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A generated access token result.</returns>
     Task<AccessTokenResult> CreateAccessTokenAsync(
         Guid userId,
         string email,
         IEnumerable<string> roles,
+        Guid sessionId,
         CancellationToken cancellationToken = default);
 }
 

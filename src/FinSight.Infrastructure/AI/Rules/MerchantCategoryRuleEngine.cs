@@ -51,6 +51,25 @@ public sealed class MerchantCategoryRuleEngine
             "Woolworths",
             "FOOD_DINING",
             "GROCERIES")
+,
+
+        new(
+            "FITNESS CLUB",
+            "FitLife Gym",
+            "HEALTHCARE",
+            null),
+
+        new(
+            "SALARY",
+            "Salary",
+            "INCOME",
+            null),
+
+        new(
+            "TRANSFER TO SAVINGS",
+            "Savings Transfer",
+            "TRANSFERS",
+            null)
     ];
 
     /// <inheritdoc />

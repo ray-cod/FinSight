@@ -23,6 +23,7 @@ public sealed class JwtTokenService(
         Guid userId,
         string email,
         IEnumerable<string> roles,
+        Guid sessionId,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -47,7 +48,15 @@ public sealed class JwtTokenService(
 
             new(
                 ClaimTypes.Email,
-                email)
+                email),
+
+            new(
+                JwtRegisteredClaimNames.Sid,
+                sessionId.ToString()),
+
+            new(
+                ClaimTypes.Sid,
+                sessionId.ToString())
         };
 
         claims.AddRange(

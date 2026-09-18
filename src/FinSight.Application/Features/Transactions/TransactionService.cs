@@ -46,10 +46,10 @@ public sealed class TransactionService(
                         transaction.Amount,
                         transaction.Currency,
                         transaction.TransactionDate,
-                        transaction.Type,
-                        transaction.Status,
-                        transaction.ClassificationStatus,
-                        transaction.ClassificationSource,
+                        transaction.Type.ToString(),
+                        transaction.Status.ToString(),
+                        transaction.ClassificationStatus.ToString(),
+                        transaction.ClassificationSource.ToString(),
                         transaction.ClassificationConfidence,
                         transaction.ClassifiedAt))
             .ToArray();
@@ -70,9 +70,9 @@ public sealed record TransactionResponse(
     decimal Amount,
     string Currency,
     DateTimeOffset TransactionDate,
-    TransactionType Type,
-    TransactionStatus Status,
-    ClassificationStatus ClassificationStatus,
-    ClassificationSource ClassificationSource,
+    string Type,
+    string Status,
+    string ClassificationStatus,
+    string ClassificationSource,
     decimal? ClassificationConfidence,
     DateTimeOffset? ClassifiedAt);

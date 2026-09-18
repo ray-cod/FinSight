@@ -102,6 +102,7 @@ public sealed class AuthController(
     [Authorize(
         Policy =
             AuthorizationPolicies.Authenticated)]
+    [EnableRateLimiting("auth")]
     public async Task<IActionResult> ChangePassword(
         ChangePasswordRequest request,
         CancellationToken cancellationToken)
@@ -149,4 +150,43 @@ public sealed class AuthController(
 
         return NoContent();
     }
+
+    /// <summary>
+    /// Returns the authenticated user's active sessions.
+    /// </summary>
+    [HttpGet("sessions")]
+    [Authorize(Policy = AuthorizationPolicies.Authenticated)]
+    [EnableRateLimiting("api")]
+    public async Task<ActionResult<IReadOnlyList<SessionResponse>>> GetSessions(
+        CancellationToken cancellationToken)
+    {
+        var sessionId = User.GetRequiredSessionId();
+
+        var response = await authService.GetSessionsAsync(
+            User.GetRequiredUserId(),
+            sessionId,
+            cancellationToken);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Revokes all active sessions except the current session.
+    /// </summary>
+    [HttpPost("sessions/revoke-others")]
+    [Authorize(Policy = AuthorizationPolicies.Authenticated)]
+    [EnableRateLimiting("auth")]
+    public async Task<ActionResult<RevokeSessionsResponse>> RevokeOtherSessions(
+        CancellationToken cancellationToken)
+    {
+        var sessionId = User.GetRequiredSessionId();
+
+        var revokedCount = await authService.RevokeOtherSessionsAsync(
+            User.GetRequiredUserId(),
+            sessionId,
+            cancellationToken);
+
+        return Ok(new RevokeSessionsResponse(revokedCount));
+    }
 }
+
